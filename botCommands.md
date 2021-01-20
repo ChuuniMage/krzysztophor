@@ -31,7 +31,9 @@ async function zeroArgumentBotCommands(commandInput) {
         break;
     }
 }
+```
 
+```typescript
 async function oneArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject;
   switch (commandInput) {
@@ -71,7 +73,9 @@ async function oneArgumentBotCommands(commandInput) {
   }
 
 }
+```
 
+```typescript
 async function twoArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject;
   switch (commandInput) {
@@ -95,7 +99,9 @@ async function twoArgumentBotCommands(commandInput) {
       break;
     }
 }
+```
 
+```typescript
 async function arbitraryArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject;
 
