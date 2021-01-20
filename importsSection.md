@@ -9,7 +9,7 @@ Root folder with index.ts
 
 While a small difference, this important change of structure decoupled the nuts & bolts of how the bot functions worked, as well as teh dependencies for those functions, with the main body of the program.
 
-```
+```typescript
 const config = require("./config.json");
 const fs = require("fs");
 import * as Discord from "discord.js";
@@ -31,7 +31,8 @@ import {
 
 The final imports section looks like this
 
-```const config = require("./config.json");
+```typescript
+const config = require("./config.json");
 import * as Discord from "discord.js";
 import { 
   extractNumbersForId,
@@ -53,7 +54,8 @@ import {
   warnCommand,
   msgCommand,
   dmsgCommand
-} from "./botCommands/botCommands";```
+} from "./botCommands/botCommands";
+```
 
 So what this shows is
 1. Extraneous imports are cleaned up
