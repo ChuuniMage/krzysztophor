@@ -4,6 +4,10 @@ This a blog detailing one of my first projects learning Typescript – a Discord
 
 The purpose of the discord bot is to provide custom quality-of-life commands for the Orthodox Christian discord server’s Administrators & Moderators. 
 
+[Folder Structure, Imports and Dependencies](importsSection.md)
+
+[Initialisation](initialisation.md)
+
 The main function of Index.ts is a switch statement containing the following commands:
 ```
 =join @User | Show when a user has joined Discord, and the Server
