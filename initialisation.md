@@ -41,4 +41,5 @@ let messageHasBotPermissions = (inputMessage:Discord.Message):boolean => {
   return true;
 }
 
-console.log("The swans have been released!");```
+console.log("The swans have been released!");
+```
