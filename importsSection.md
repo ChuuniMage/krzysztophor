@@ -2,25 +2,25 @@
 
 The old folder structure is
 
--Root folder with index.ts and config.json
-  -Utilities folder with argUtils.ts, chanUtils.ts, and roleUtils.ts
+- Root folder with index.ts and config.json
+  - Utilities folder with argUtils.ts, chanUtils.ts, and roleUtils.ts
 
 The contents of those files are as follows:
 
 # Root
-  -index.ts contains the main function of the program
-  -config.json contains information covered in the [initialisation section](initialisation.md)
+  - index.ts contains the main function of the program
+  - config.json contains information covered in the [initialisation section](initialisation.md)
   
 # Utilities
-  -argUtils.ts contains utility functions for parsing arguments with the bot
-  -chanUtils.ts contains utility functions for the server channel context
-  -roleUtils.ts contains utility functions for user role manipulation
+  - argUtils.ts contains utility functions for parsing arguments with the bot
+  - chanUtils.ts contains utility functions for the server channel context
+  - roleUtils.ts contains utility functions for user role manipulation
 
 The new folder structure is
 
--Root folder with index.ts and config.json
- -botCommands folder with botCommands.ts
-   -Utilities folder with argUtils.ts, chanUtils.ts, and roleUtils.ts
+- Root folder with index.ts and config.json
+ - botCommands folder with botCommands.ts
+   - Utilities folder with argUtils.ts, chanUtils.ts, and roleUtils.ts
 
 Which is identical to the previous structure, except for the botCommands folder: Now, most of the utility functions are dependencies in the botCommands folder, not the index file. While a small difference, this decoupling means less fiddling with the index file in order to update the inner behavior of one of its sub-features.
 
