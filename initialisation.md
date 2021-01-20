@@ -1,6 +1,7 @@
 ## Initialisation
 
-```const client = new Discord.Client();
+```typescript
+const client = new Discord.Client();
 client.login(config.BOT_TOKEN);
 const prefix = "=";
 const serverId = config.SERVER_ID; // Swan Hatchery ID
