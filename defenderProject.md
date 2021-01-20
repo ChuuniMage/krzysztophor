@@ -8,6 +8,12 @@ The purpose of the discord bot is to provide custom quality-of-life commands for
 
 [Initialisation](initialisation.md)
 
+[Behavior on Message](onMessage.md)
+
+[The Bot Commands](botCommands.md)
+
+[Summary & Overview](summary.md)
+
 The main function of Index.ts is a switch statement containing the following commands:
 ```
 =join @User | Show when a user has joined Discord, and the Server
