@@ -1,6 +1,7 @@
 Bot commands & their development
 
-```async function zeroArgumentBotCommands(commandInput) {
+```
+async function zeroArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject
 
   switch(commandInput){
@@ -112,4 +113,4 @@ async function arbitraryArgumentBotCommands(commandInput) {
       break;
     }
   }
-;```
+```
