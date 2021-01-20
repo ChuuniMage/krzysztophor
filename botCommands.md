@@ -1,6 +1,6 @@
 Bot commands & their development
 
-```
+```typescript
 async function zeroArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject
 
