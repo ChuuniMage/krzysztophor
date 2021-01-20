@@ -1,23 +1,4 @@
-## Folder Structure, Imports and Dependencies
-
-The old folder structure is
-
-- ./ Root folder with index.ts and config.json
-  - index.ts contains the main function of the program
-  - config.json contains information covered in the [initialisation section](initialisation.md)
-    - ./Utilities folder with argUtils.ts, chanUtils.ts, and roleUtils.ts
-      - argUtils.ts contains utility functions for parsing arguments with the bot
-      - chanUtils.ts contains utility functions for the server channel context
-      - roleUtils.ts contains utility functions for user role manipulation
-
-The new folder structure is
-
-- Root folder (same as before)
-  - botCommands folder with botCommands.ts
-    - botCommands.ts contains bot command functions, extracted from index.ts
-      - Utilities folder (same as before)
-      
-With the addition of the botCommands folder, where the Utilities folder has been relocated, a key architectural improvement has been implemented: Now, most of the utility functions are dependencies of botCommands.ts, not the index file. This decoupling means the index file can remain untouched if any of the inner workings of the bot functions needs updating, and if a new feature is implemented, the index file needs less change.
+## Imports, Dependencies and Folder Structure, 
 
 ```typescript
 const config = require("./config.json");
@@ -72,3 +53,22 @@ So what this shows is
 2. The dependencies for the imports have been 
 1. The fs dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
 2. Every command (except for Help) is abstracted into the 
+
+The old folder structure is
+
+- ./ Root folder with index.ts and config.json
+  - index.ts contains the main function of the program
+  - config.json contains information covered in the [initialisation section](initialisation.md)
+    - ./Utilities folder with argUtils.ts, chanUtils.ts, and roleUtils.ts
+      - argUtils.ts contains utility functions for parsing arguments with the bot
+      - chanUtils.ts contains utility functions for the server channel context
+      - roleUtils.ts contains utility functions for user role manipulation
+
+The new folder structure is
+
+- Root folder (same as before)
+  - botCommands folder with botCommands.ts
+    - botCommands.ts contains bot command functions, extracted from index.ts
+      - Utilities folder (same as before)
+      
+With the addition of the botCommands folder, where the Utilities folder has been relocated, a key architectural improvement has been implemented: Now, most of the utility functions are dependencies of botCommands.ts, not the index file. This decoupling means the index file can remain untouched if any of the inner workings of the bot functions needs updating, and if a new feature is implemented, the index file needs less change.
