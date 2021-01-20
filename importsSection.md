@@ -16,8 +16,8 @@ The new folder structure is
   - botCommands folder with botCommands.ts
     - botCommands.ts contains bot command functions, extracted from index.ts
       - Utilities folder (same as before)
-
-Which is identical to the previous structure, except for the botCommands folder: Now, most of the utility functions are dependencies in the botCommands folder, not the index file. While a small difference, this decoupling means less fiddling with the index file in order to update the inner behavior of one of its sub-features.
+      
+With the addition of the botCommands folder, where the Utilities folder has been relocated, a key architectural improvement has been implemented: Now, most of the utility functions are dependencies of botCommands.ts, not the index file. This decoupling means the index file can remain untouched if any of the inner workings of the bot functions needs updating, and if a new feature is implemented, the index file needs less change.
 
 ```typescript
 const config = require("./config.json");
