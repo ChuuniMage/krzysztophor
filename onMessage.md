@@ -1,6 +1,7 @@
 This is what the on message code block is
 
-```client.on("message", function (currentMessage) {//takes a message object as input
+```typescript
+client.on("message", function (currentMessage) {//takes a message object as input
   if (!messageHasBotPermissions(currentMessage)){return}
   const fetchCurrentGuildObject = client.guilds.fetch(serverId);
   const commandBody = currentMessage.content.slice(prefix.length);
