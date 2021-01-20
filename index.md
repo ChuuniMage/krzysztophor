@@ -1,6 +1,6 @@
 ## Welcome to GitHub Pages
 
-[About us](defenderProject.md)
+[Defender Project](defenderProject.md)
 
 You can use the [editor on GitHub](https://github.com/ChuuniMage/kristopher.github.io/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
