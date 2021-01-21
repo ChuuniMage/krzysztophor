@@ -20,6 +20,11 @@ import {
 } from "./Utilities/roleUtils";
 ```
 
+Some problems that needed to be cleared up included:
+- importing the 'fs' library for a single function in the main index file
+- repeated imports of the same 
+- partial extraction of functions from
+
 The final imports section looks like this
 
 ```typescript
@@ -48,11 +53,12 @@ import {
 } from "./botCommands/botCommands";
 ```
 
-So what this shows is
-1. Extraneous imports are cleaned up
-2. The dependencies for the imports have been 
-1. The fs dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
-2. Every command (except for Help) is abstracted into the 
+
+1. Dependencies for lower level components have been abstracted, and extraneous imports have been removed
+2. The fs dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
+3. Every command (except for Help) is abstracted into the botCommands.ts file
+
+This change in dependency structure naturally requires an update in folder structure to accomodate.
 
 The old folder structure is
 
