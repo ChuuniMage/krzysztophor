@@ -20,6 +20,9 @@ const serverId = "780615987857850368"; // Swan Hatchery(test server) ID
 const fetchCurrentGuildObject = client.guilds.fetch(serverId);
 ```
 
+This initiliastion contains:
+- Instantiation of a new `Discord.Client()` object
+
 The extraneous on-message initialisation is as follows
 
 ```typescript
