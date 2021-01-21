@@ -20,13 +20,25 @@ const serverId = "780615987857850368"; // Swan Hatchery(test server) ID
 const fetchCurrentGuildObject = client.guilds.fetch(serverId);
 ```
 
-This initiliastion contains:
-- Instantiation of a new `Discord.Client()` object
+This initiliastion does the following:
+- Instantiates a new `Discord.Client()` object, so we can access the associated methods on the object.
+- Log into the Discord as a bot user, with the bot token specified in the config.json.
+- Initialise the prefix being used to parse user messages for bot commands.
+- Provide the ID for the server the bot is to join into.
+- Define a constant for the Promise of a Discord Guild object cache.
 
-The extraneous on-message initialisation is as follows
+After this initialisation, the `client.on` method is called, which defines a behavior for every time a specified event occurs from the perspective of the bot. We specify in this function to perform this operation on every Discord message event with:
 
 ```typescript
 client.on("message", function (message) {
+```
+
+The first things the bot does is check if:
+1. The author of the message is a bot; and if so, terminate the operation.
+2. Check if the message starts with the prefix `=`, and if not, terminate the operation.
+3. Define a function to check if members have any of three roles, Moderator, Administrator, or Jay Dyer.
+
+```typescript
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
@@ -36,15 +48,26 @@ client.on("message", function (message) {
   );
 
   if (!messagerIsModOrAdminOrJayDyer) return;
+  ```
 
+Next, the bot collects the content of the message, and  parses the message values in different variables for the following purposes:
+1. `args`, which is an array of strings, tokens to use for our arguments
+2. `command`, which extracts first argument token, to determine the command our bot performs
+3. `reasonMessage`, which stores in the case of a command such as `=kick @User For being a nuisance."
+4. `firstArgId`, which extracts the user ID string , 
+  -In a Discord message, what looks like `@Username` or `#channel-name` to a regular user, is something like `<!@12345678912345678>` under the hood
+
+```typescript
   const commandBody = message.content.slice(prefix.length);
   const args = commandBody.split(" ");
   const command = args.shift().toLowerCase();
 
   let reasonMessage = args.slice(1, 9999).join(" ");
   let firstArgId = extractNumbersForId(args[0]);
+```
 
-  //remake to be generic?
+
+```typescript
   let memberHasRolesFromArgs = (
     inputMemberCache: Discord.GuildMember
   ): boolean => {
@@ -86,7 +109,6 @@ const client = new Discord.Client();
 client.login(config.BOT_TOKEN);
 const prefix = "=";
 const serverId = config.SERVER_ID; // Swan Hatchery ID
-// const fetchCurrentGuildObject = client.guilds.fetch(serverId);
 
 let botPermissionsRoleList:string[] = [
   "Moderator", 
