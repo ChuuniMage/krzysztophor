@@ -71,4 +71,4 @@ let executeBotCommands = (command:string) => {
 
 The second item on that list will be addressed in the next page, on one argument commands
 
-[>> Zero argument commmands](commandDev/zeroArgs.md)
+[>> One argument commmands](commandDev/oneArg.md)
