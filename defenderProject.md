@@ -4,6 +4,8 @@ This a blog detailing one of my first projects learning Typescript – a Discord
 
 The purpose of the discord bot is to provide custom quality-of-life commands for the Orthodox Christian discord server’s Administrators & Moderators. 
 
+[Introduction](introduction.md)
+
 [Folder Structure, Imports and Dependencies](importsSection.md)
 
 [Initialisation & behavior on Message](initialisationAndOnMessage.md)
