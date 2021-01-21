@@ -5,14 +5,14 @@ This a blog detailing one of my first projects learning Typescript – a Discord
 The purpose of the discord bot is to provide custom quality-of-life commands for the Orthodox Christian discord server’s Administrators & Moderators. 
 
 [Introduction](introduction.md)
-
+[//]: # "asdf"
 [Folder Structure, Imports and Dependencies](importsSection.md)
 
 [Initialisation & behavior on Message](initialisationAndOnMessage.md)
 
 [The Bot Commands](botCommands.md)
-- [Zero argument commmands](commandDev/zeroArgs.md)
 - [One argument commmands](commandDev/oneArg.md)
+- [Zero argument commmands](commandDev/zeroArgs.md)
 - [Two argument commmands](commandDev/twoArgs.md)
 - [Arbitrary argument commmands](commandDev/twoArgs.md)
 
