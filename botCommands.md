@@ -2,6 +2,8 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
+Optimised bot commands:
+
 ```typescript
 async function zeroArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject
@@ -122,3 +124,25 @@ async function arbitraryArgumentBotCommands(commandInput) {
     }
   }
 ```
+
+As an example, here is the start of the previous `executebotCommand` function, with the first command in it
+
+```typescript
+  async function executeBotCommand(commandInput) {
+    let currentGuildObject = await fetchCurrentGuildObject;
+
+    switch (commandInput) {
+      case "join": // =join @user
+        if (!firstArgId) {
+          return;
+        }
+        let testedMember = await currentGuildObject.members.fetch(firstArgId);
+        let discordJoinDate = testedMember.user.createdAt.toDateString();
+        let serverJoinDate = testedMember.joinedAt.toDateString();
+        message.channel.send(
+          `${args[0]} joined:
+         - Discord on ${discordJoinDate}
+         - ${currentGuildObject.name} on ${serverJoinDate}`
+        );
+        break;
+       ```
