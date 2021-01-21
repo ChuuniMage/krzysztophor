@@ -1,6 +1,6 @@
 ## Imports, Dependencies and Folder Structure, 
 
-[Back](defenderProject.md)
+[<< Back to Project Overview](defenderProject.md)
 
 ```typescript
 const config = require("./config.json");
