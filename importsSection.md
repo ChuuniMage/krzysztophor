@@ -4,7 +4,7 @@
 
 Every programming project needs an main index file, to define the primary behavior of the program. This post details the imports & dependencies of the this main index file, as well as the folder structure of the project that reflects these imports & dependencies. Since this post is for the imports, dependencies, and folder structure, the details of the functions and imports in question will be skimmed over for now.
 
-For the initial commit of this project on github, this is what was imported:
+For the initial commit, these are the imports:
 - A config file that contains bot keys & server IDs
 - The fs library for reading & writing files with node
 - The 'Discord.js' library, since this of course is a discord bot
