@@ -1,18 +1,28 @@
-## Initialisation
+## Initialisation & On Message behavior
 
 [<< Back to Project Overview](defenderProject.md)
 
-The old initialisation process:
+This post will cover two topics:
+1. The initialisation process for the bot when it starts up
+2. The behavior of the bot whenever it reads a message in a Discord server
+
+The reason that, is because a lot of functionality that used to be performed on each message, was either abstracted into a utility, or moved into the initialisation process. It's inefficient to have a program tautologically re-declare a variable or function to be itself over and over.
+
+The old initialisation process
 
 ```typescript
-console.log("The swans have been released!");
+console.log("The swans have been released!"); // console log to declare the bot has been initialised
 
 const client = new Discord.Client();
 client.login(config.BOT_TOKEN);
 const prefix = "=";
-const serverId = "780615987857850368"; // Swan Hatchery ID
+const serverId = "780615987857850368"; // Swan Hatchery(test server) ID
 const fetchCurrentGuildObject = client.guilds.fetch(serverId);
+```
 
+The extraneous on-message initialisation is as follows
+
+```typescript
 client.on("message", function (message) {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
@@ -66,6 +76,8 @@ client.on("message", function (message) {
   async function executeBotCommand(commandInput) {...// etc
 ```
 
+The new initialisation process:
+
 ```typescript
 const client = new Discord.Client();
 client.login(config.BOT_TOKEN);
@@ -112,6 +124,8 @@ console.log("The swans have been released!");
 client.on("message", function (currentMessage) //etc...
 ```
 
+
+---
 
 This is what the on message code block is
 
