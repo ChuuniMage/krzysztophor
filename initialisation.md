@@ -1,5 +1,13 @@
 ## Initialisation
 
+[<< Back to Project Overview](defenderProject.md)
+
+The old initialisation process:
+
+```typescript
+
+```
+
 ```typescript
 const client = new Discord.Client();
 client.login(config.BOT_TOKEN);
