@@ -53,7 +53,6 @@ import {
 } from "./botCommands/botCommands";
 ```
 
-
 1. Dependencies for lower level components have been abstracted, and extraneous imports have been removed
 2. The fs dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
 3. Every command (except for Help) is abstracted into the botCommands.ts file
@@ -72,9 +71,9 @@ The old folder structure is
 
 The new folder structure is
 
-- Root folder (same as before)
-  - botCommands folder with botCommands.ts
+- ./ Root folder *(unchanged)*
+  - ./botCommands folder with botCommands.ts
     - botCommands.ts contains bot command functions, extracted from index.ts
-      - Utilities folder (same as before)
+      - ./botCommands/Utilities folder *(unchanged)*
       
 With the addition of the botCommands folder, where the Utilities folder has been relocated, a key architectural improvement has been implemented: Now, most of the utility functions are dependencies of botCommands.ts, not the index file. This decoupling means the index file can remain untouched if any of the inner workings of the bot functions needs updating, and if a new feature is implemented, the index file needs less change.
