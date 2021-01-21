@@ -1,0 +1,101 @@
+# The IterateOverMembersAndReturnData function
+
+[<< Back to Project Overview](defenderProject.md)
+
+This, however, when push came to shove, the implementation of this function was *too* cute, and led to a lot more complications along the way.
+
+```typescript
+export const iterateOverMembersAndReturnData = 
+async (dataToUpdate:any, 
+inputGuild:Discord.Guild, 
+fulfillConditionToUpdateData:Function, 
+dataUpdater:Function):Promise<any> => {
+ let members = await inputGuild.members.fetch();
+ members.forEach((_member) => {
+   let isConditionFulfilled: boolean = fulfillConditionToUpdateData(_member);
+   if (isConditionFulfilled) {
+     dataUpdater(_member, dataToUpdate);
+   }
+ });
+ return dataToUpdate;
+}
+```
+
+So this function was abstracted, since by the function name, I wanted to iterate over members and return data.
+The following commands used this function:
+- howmanyare
+- whois
+- replaceall
+- checkpfp
+
+This had me feeling smart. However, feeling smart about a cute and complicated abstraction isn't the same as making a smart design decision, so this function was ultimately scrapped.
+
+howmanyare:
+
+```typescript
+export let howManyAreCommand = async (inputGuildObject:Discord.Guild, inputArgs:string[], inputMessage:Discord.Message) => {
+  let testedIdArray = returnIdArrayFromArgs(inputArgs)
+  let checkedMembers = await inputGuildObject.members.fetch();
+  let usersWithRolesArray:string[] = []
+  checkedMembers.forEach((member) => {
+    if (memberHasAllRolesById(testedIdArray)(member)){
+      usersWithRolesArray.push(member.user.username);
+    }
+  })
+  inputMessage.channel.send(
+    `Number of users with the following roles[${inputArgs.join(", ")}] : ${usersWithRolesArray.length}`)
+}
+```
+
+whois:
+
+```typescript
+export let whoIsCommand = async (inputGuildObject:Discord.Guild, 
+  inputArgs:string[], 
+  inputMessage:Discord.Message) => {
+  let testedIdArray = returnIdArrayFromArgs(inputArgs)
+  let checkedMembers = await inputGuildObject.members.fetch();
+  let usernameAndNicknameArray:string[] = []
+  checkedMembers.forEach((member) => {
+    if (memberHasAllRolesById(testedIdArray)(member)){
+      let nickname = member.nickname ? member.nickname : member.user.username;
+      // Populates array with: "DiscordUser#1234 (Nickname)"
+      usernameAndNicknameArray.push(`${member.user.username}#${member.user.discriminator} (${nickname})`);}
+      })
+      let computedPost:string
+      let postedUsers:string
+      if (usernameAndNicknameArray[0] === undefined){
+        postedUsers = 'No-one.';
+      } else {
+        postedUsers = usernameAndNicknameArray.join(", ")
+      }
+    computedPost = `The users with the roles[${inputArgs.join(", ")}] are: ${postedUsers}`
+  appendTxtFileIfPostTooBig(computedPost,inputMessage)
+}
+```
+
+checkpfp
+```typescript
+export let checkPFPCommand = async (inputGuildObject:Discord.Guild) => {
+  let checkedMembers = await inputGuildObject.members.fetch();
+  checkedMembers.forEach((member) => {
+  changePFPCheck(member)
+  })
+}
+```
+
+
+replaceall: 
+```typescript
+export let replaceAllRolesCommand = async (inputGuildObject:Discord.Guild,inputReplacedRoleId:string,inputNewRoleId:string) => {
+  let checkedMembers = await inputGuildObject.members.fetch();
+  checkedMembers.forEach((member)=> {
+    if (memberHasAllRolesById([inputReplacedRoleId])(member)){
+    updateUserRole.removeRole.byId(inputGuildObject,member.id,inputReplacedRoleId);
+    updateUserRole.addRole.byId(inputGuildObject,member.id,inputNewRoleId)
+      };
+  })
+}
+```
+
+
