@@ -5,6 +5,30 @@
 Optimised bot commands:
 
 ```typescript
+let executeBotCommands = (command:string) => {
+  let lengthOfArgs = args.length
+  switch(lengthOfArgs){
+  case(0):
+    zeroArgumentBotCommands(command)
+    break;
+  case(1):
+    oneArgumentBotCommands(command)
+    arbitraryArgumentBotCommands(command);
+    break;
+  case(2): 
+    oneArgumentBotCommands(command) // To account for reasonmessage
+    twoArgumentBotCommands(command)
+    arbitraryArgumentBotCommands(command);
+    break;
+  default:
+    arbitraryArgumentBotCommands(command);
+    break;
+  }
+}
+```
+
+
+```typescript
 async function zeroArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject
 
