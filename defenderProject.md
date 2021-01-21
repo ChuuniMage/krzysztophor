@@ -6,9 +6,7 @@ The purpose of the discord bot is to provide custom quality-of-life commands for
 
 [Folder Structure, Imports and Dependencies](importsSection.md)
 
-[Initialisation](initialisation.md)
-
-[Behavior on Message](onMessage.md)
+[Initialisation & behavior on Message](initialisationAndOnMessage.md)
 
 [The Bot Commands](botCommands.md)
 
