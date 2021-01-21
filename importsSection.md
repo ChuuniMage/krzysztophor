@@ -2,6 +2,12 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
+What's being imported into the main index file is
+- A config file that contains bot keys & server IDs
+- The fs library for reading & writing files with node
+- The 'Discord.js' library, since this of course is a discord bot
+- A slew of utility functions abstracted from the production of the initial commit, to declutter the main index file
+
 ```typescript
 const config = require("./config.json");
 const fs = require("fs");
@@ -55,9 +61,9 @@ import {
 } from "./botCommands/botCommands";
 ```
 
-1. Dependencies for lower level components have been abstracted, and extraneous imports have been removed
-2. The fs dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
-3. Every command (except for Help) is abstracted into the botCommands.ts file
+1. The fs dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
+2. Every command (except for Help) is abstracted into botCommands.ts, which now depends on the lower level components in Utilities.
+
 
 This change in dependency structure naturally requires an update in folder structure to accomodate.
 
