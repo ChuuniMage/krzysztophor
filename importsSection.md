@@ -35,7 +35,7 @@ import {
 Some problems that needed to be cleared up included:
 - Importing the node File System library (`fs`) library for a single function in the main index file
 - Redundant imports of the same `applyRoleByIdToUser` and `RemoveRoleByIdFromUser` functions
-- Not enough functions are extracted from the body of the index file
+- Not enough functions are extracted from the body of the index file into seperate libraries
 
 The 1.0 Release imports section looks like this:
 
@@ -86,4 +86,8 @@ The release folder structure is:
   - ./botCommands folder with botCommands.ts
     - botCommands.ts contains bot command functions, extracted from index.ts
       - ./botCommands/Utilities folder *(unchanged)*
+      
+The next post will detail the initialisation of the index file, as well as the behavior every time the bot detects a message has been posted to Discord.
+
+[>> Initialisation & behavior on Message](initialisationAndOnMessage.md)
       
