@@ -2,10 +2,10 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
-The Orthodox Defender project is a bot for the Orthodox Christian discord server, currently serving nearly 5,000 members, to provide quality of life to moderators for repeated moderator activities. 
+The Orthodox Defender project is a bot for the Orthodox Christian discord server, currently serving nearly 5,000 members, to provide quality of life to Moderators & Administrators for repeated moderation actions. 
 
-This was one of my first completed projects in Typescript, using node.js to deploy the bot, and Google cloud to host the virtual machine that permanently hosts the bot. I've learned a lot during, and so this series of articles reviews the initial pre-release commit I made to github, and the 1.0 Release of the bot before it was implemented in the server.
+This was one of my first completed projects in Typescript, using node.js to deploy the bot, and Google cloud to host the virtual machine that permanently hosts the bot. I've learned a lot during this project, and so this series of articles reviews the initial pre-release commit I made to github, the 1.0 release of the bot for its implementation into the server, and my design process for the program's architecture.
 
-In the next article, I will talk about the folder structure, imports, and dependencies of the project.
+In the next article, I will talk about the project's imports, dependencies and folder structure.
 
-[>> Folder Structure, Imports and Dependencies](importsSection.md)
+[>> Imports, Dependencies and Folder Structure](importsSection.md)
