@@ -2,6 +2,8 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
+The initialisation process for the main index file of a program prepares the rest of the program for its function.
+
 This post will cover two topics:
 1. The initialisation process for the bot when it starts up
 2. The behavior of the bot whenever it reads a message in a Discord server
@@ -34,9 +36,9 @@ client.on("message", function (message) {
 ```
 
 The first things the bot does is check if:
-1. The author of the message is a bot; and if so, terminate the operation.
-2. Check if the message starts with the prefix `=`, and if not, terminate the operation.
-3. Define a function to check if members have any of three roles, Moderator, Administrator, or Jay Dyer.
+- The author of the message is a bot; and if so, terminate the operation.
+- Check if the message starts with the prefix `=`, and if not, terminate the operation.
+- Define a function to check if members have any of three roles, Moderator, Administrator, or Jay Dyer.
 
 ```typescript
   if (message.author.bot) return;
@@ -51,11 +53,11 @@ The first things the bot does is check if:
   ```
 
 Next, the bot collects the content of the message, and  parses the message values in different variables for the following purposes:
-1. `args`, which is an array of strings, tokens to use for our arguments
-2. `command`, which extracts first argument token, to determine the command our bot performs
-3. `reasonMessage`, which stores in the case of a command such as `=kick @User For being a nuisance."
-4. `firstArgId`, which extracts the user ID string , 
-  -In a Discord message, what looks like `@Username` or `#channel-name` to a regular user, is something like `<!@12345678912345678>` under the hood
+- `args`, which is an array of strings, tokens to use for our arguments
+- `command`, which extracts first argument token, to determine the command our bot performs
+- `reasonMessage`, which stores in the case of a command such as `=kick @User For being a nuisance."
+- `firstArgId`, which extracts the ID string from the first argument after the command input. 
+  -In a Discord message, what looks like `@Username` or `#channel-name` to a regular user, looks like`<!@12345678912345678>` under the hood to use this ID number, it must be extracted from the message.
 
 ```typescript
   const commandBody = message.content.slice(prefix.length);
@@ -66,6 +68,12 @@ Next, the bot collects the content of the message, and  parses the message value
   let firstArgId = extractNumbersForId(args[0]);
 ```
 
+The next three entries are:
+- the memberHasRolesFromArgs function, which reads arguments fed into the bot for if a member has all of the listed roles. 
+- the VIPRoleList array, which is an array of role names that are immune to bot commands such as `kick` or `ban
+- the isMemberVIP function, which tests for whether the user has a VIP role
+
+After those entries, the bot command functions are defined.
 
 ```typescript
   let memberHasRolesFromArgs = (
@@ -102,24 +110,21 @@ Next, the bot collects the content of the message, and  parses the message value
   async function executeBotCommand(commandInput) {...// etc
 ```
 
-The new initialisation process:
+This is not ideal for the following reasons.
+
+The 1.0 Release initialisation process, as follows, makes the following improvements:
+- `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to config.json, to decouple the details of the server itself from the main index file.
+- `isMemberVIP` function is defined prior, so that it isn't redefiend every time a message event is sent
+- The bot permissions checks have been extracted into a function, to declutter the `on message` event code
+- The initialisation confirmation console log, "The swans have been released!" is moved to the end of the initialisation, rather than the start. Now it's a useful message in the console.
 
 ```typescript
 const client = new Discord.Client();
 client.login(config.BOT_TOKEN);
 const prefix = "=";
 const serverId = config.SERVER_ID; // Swan Hatchery ID
-
-let botPermissionsRoleList:string[] = [
-  "Moderator", 
-  "Administrator", 
-  "Jay Dyer"]
-
-let VIPRoleList:string[] = botPermissionsRoleList.concat([
-  "Apologist",
-  "Orthodox Deacon",
-  "Orthodox Priest",
-  "Orthodox Bishop",]);
+const VIPRoleList = config.VIPRoleList
+const botPermissionsRoleList = config.botPermissionsRoleList
 
 export const isMemberVIP = (inputMember:Discord.GuildMember): boolean => {
   return memberHasAnyRoleByName(inputMember, VIPRoleList);
@@ -164,26 +169,5 @@ client.on("message", function (currentMessage) {//takes a message object as inpu
 
   let firstArgId = extractNumbersForId(args[0]);
   let reasonForModeration = args.slice(1, 9999).join(" ");
-  
+```  
 
-let executeBotCommands = (command:string) => {
-  let lengthOfArgs = args.length
-  switch(lengthOfArgs){
-  case(0):
-    zeroArgumentBotCommands(command)
-    break;
-  case(1):
-    oneArgumentBotCommands(command)
-    arbitraryArgumentBotCommands(command);
-    break;
-  case(2): 
-    oneArgumentBotCommands(command) // To account for reasonmessage
-    twoArgumentBotCommands(command)
-    arbitraryArgumentBotCommands(command);
-    break;
-  default:
-    arbitraryArgumentBotCommands(command);
-    break;
-  }
-}
-```
