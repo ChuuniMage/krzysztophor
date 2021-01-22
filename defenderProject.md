@@ -10,6 +10,8 @@ The purpose of the discord bot is to provide custom quality-of-life commands for
 
 [Initialisation & behavior on Message](initialisationAndOnMessage.md)
 
+[argUtils.ts - The Argument Utilities](argUtils.md)
+
 [The Bot Commands](botCommands.md)
 - [One argument commmands](commandDev/oneArg.md)
 - [Zero argument commmands](commandDev/zeroArgs.md)
