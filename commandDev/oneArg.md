@@ -88,4 +88,4 @@ export let joinCommand = async (inputGuildObject:Discord.Guild,
 }
 ```
 
-- [Zero argument commmands](commandDev/zeroArgs.md)
+[>> Zero argument commmands](commandDev/zeroArgs.md)
