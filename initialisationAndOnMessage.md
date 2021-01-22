@@ -174,6 +174,6 @@ async function executeBotCommands (command:string) {...
 ```  
 One other thing has changed: `const fetchCurrentGuildObject = client.guilds.fetch(serverId)` has been relocated here, to ensure that the bot is always fetching the most recent cache. Since it was defining the cache fetch prior to the message event, there was no guarantee that it was fetching the most up-to-date cache possible every time. Overall, this structure is far cleaner and introduces less performance issues.
 
-Next, we will look at the Argument parsing utility functions.
+Before we look at the commands themselves,  we will look at the Argument-Parsing Utility functions.
 
 [>> The Argument Utilities](argUtils.md)
