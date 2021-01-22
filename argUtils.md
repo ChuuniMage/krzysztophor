@@ -2,6 +2,8 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
+[< Back to Initialisation & behavior on Message](initialisationAndOnMessage.md)
+
 One of the three utilities files the bot implements is argUtils.ts, which contains two utility functions for parsing arguments.
 
 The first function, `extractNumbersForId` is unchanged from the initial commit, to the production release.
