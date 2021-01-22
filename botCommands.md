@@ -2,12 +2,30 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
-As an example, here is the start of the previous `executebotCommand` function, with the first command in it
+The whole purpose of the bot is to perform commands given to it from Discord messages. These posts will cover the structure of the functions of the commands, as well as the higher level structure around implementing these functions into the bot.
+
+As an example, here is the start of the initial commit's `executebotCommand` function,
+
+- The initialisation of `executeBotCommand` asynchronously fetches the discord server cache, ie the `Discord.Guild` object, defined earlier
+- The the top level structure of the function is a switch statement, feeding every valid command into the switch statement for further
 
 ```typescript
   async function executeBotCommand(commandInput) {
     let currentGuildObject = await fetchCurrentGuildObject;
+```
 
+In this example we'll examine the first function in the switch statement, the `join` command:
+- The purpose of the 'join' command is to test when a user has joined Discord, and when they have joined the server. This is useful when discerning if the user's account is freshly created, as another piece of information to help discern if the user is new to the server, or if the account is a freshly made troll account.
+- The first thing the command does is check if there is in fact a first argument fed into the command. If there is no argument, or it is not parsable as an ID, then the command isn't carried out.
+- The `firstArgId` variable is fed into the `Discord.Guild` object's `members.fetch()` method asynchronously, to get the cache for that Discord member
+- Utilising the fetched `Discord.Guildmember` object, we call its `user.createdAt()` method for the date the user joined Discord, and the `.joinedAt()` method for the date they joined the server. These are both passed through the `toDateString()` method to render these times as Javascript date strings.
+- The final portion of this function, is the `message.channel.send()` method, which instructs the bot to. 
+  - The first element of the `args` array, which is the raw input for the user being tested.
+  - The user's Discord join date
+  - The Server's name, and the user's join date to this Server.
+
+
+```typescript
     switch (commandInput) {
       case "join": // =join @user
         if (!firstArgId) {
@@ -40,11 +58,7 @@ There is this particular piece of boilerplate in every single bot command that t
 ```
 Boilerplate sucks. The purpose of this boilerplate is to test if there is a valid argument fed into the bot command.
 
-However, this is better sorted out in two ways:
-1. Set up a bottleneck around the amount of arguments fed into the function, so that the function cannot be called with an invalid number of arguments
-2. Implement async catch statements in the functions to return an error if the function parameter is invalid.
-
-Item 1 has been easily implemented in the 1.0 Release:
+To sort this out, we change the `executeBotCommands` function to be a bottleneck for checks like this, so that the bot commands cannot be called with an invalid number of arguments.
 
 ```typescript
 let executeBotCommands = (command:string) => {
@@ -69,6 +83,20 @@ let executeBotCommands = (command:string) => {
 }
 ```
 
-The second item on that list will be addressed in the next page, on one argument commands
+So where does our `join` command go now? It's the first switch case in the the `oneArgumentBotCommands` function.
+
+```typescript
+async function oneArgumentBotCommands(commandInput) {
+  let currentGuildObject = await fetchCurrentGuildObject;
+  switch (commandInput) {
+  case "join": // =join @user
+    let joinTestUser = firstArgId;
+    joinCommand(currentGuildObject,joinTestUser,currentMessage)
+    break;
+```
+
+As mentioned in the [Folder Structure, Imports and Dependencies](importsSection.md) post, the `join` function has been abstracted into an imported `joinCommand` function.
+
+In the next post, we'll see how `join`, and other one argument commands, have been changed. 
 
 [>> One argument commmands](commandDev/oneArg.md)
