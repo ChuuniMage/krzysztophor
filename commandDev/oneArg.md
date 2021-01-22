@@ -2,6 +2,8 @@
 
 [<< Back to Project Overview](../defenderProject.md)
 
+[< Back to The Bot Commands](botCommands.md)
+
 In this post, we'll cover the commands which take one argument as their input. The first one we cover is the `join` command.
 
 - The purpose of the 'join' command is to test when a user has joined Discord, and when they have joined the server. This is useful when discerning if the user's account is freshly created, as another piece of information to help discern if the user is new to the server, or if the account is a freshly made troll account.
