@@ -38,14 +38,14 @@ client.on("message", function (message) {
 The first things the bot does is check if:
 - The author of the message is a bot; and if so, terminate the operation.
 - Check if the message starts with the prefix `=`, and if not, terminate the operation.
-- Define a function to check if members have any of three roles, Moderator, Administrator, or Jay Dyer.
+- Define a boolean to check if the member who made the post has any of three roles, Moderator, Administrator, or Jay Dyer. The details of the `memberHasAnyRoleByName` function will be covered in a later post.
 
 ```typescript
 //client.on("message"... part 2
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
-  let messagerIsModOrAdminOrJayDyer: boolean = memberHasAnyRoleByName(
+  let messagerIsModOrAdminOrJayDyer:boolean = memberHasAnyRoleByName(
     message.member,
     ["Moderator", "Administrator", "Jay Dyer"]
   );
@@ -71,9 +71,9 @@ Next, the bot collects the content of the message, and  parses the message value
 ```
 
 The next three components are:
-- the memberHasRolesFromArgs function, which reads arguments fed into the bot for if a member has all of the listed roles. 
-- the VIPRoleList array, which is an array of role names that are immune to bot commands such as `kick` or `ban
-- the isMemberVIP function, which tests for whether the user has a VIP role
+- The memberHasRolesFromArgs function, used later in the body of the message function, reads arguments fed into the bot for if a member has all of the listed roles. 
+- The VIPRoleList array, which is an array of role names that are immune to bot commands such as `kick` or `ban
+- The isMemberVIP function, which tests for whether the user has a VIP role
 
 ```typescript
 //client.on("message"... part 4
@@ -115,7 +115,7 @@ Clearly, having so many computations being performed every single time a message
 
 In the 1.0 Release, I optimised the initialisation process and the on message behavior the following ways:
 - `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to the config.json, to decouple the details of the server itself from the main index file.
-- The `memberHasRolesFromArgs` has been completely changed a
+- The `memberHasRolesFromArgs` has been abstracted and changed. The following post will explicate the details around its previous implementation, and how it has changed.
 - `isMemberVIP` function is defined prior, so that it isn't redefiend every time a message event is sent
 - The bot permissions checks have been extracted into the `messageHasBotPermissions` function, to declutter the `on message` event code
 - The initialisation confirmation console log, "The swans have been released!" is moved to the end of the initialisation, rather than the start. Now it's a useful message in the console.
