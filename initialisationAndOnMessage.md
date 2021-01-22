@@ -1,16 +1,14 @@
-## Initialisation & On Message behavior
+## Initialisation & Message Initialisation
 
 [<< Back to Project Overview](defenderProject.md)
 
 [< Back to Folder Structure, Imports and Dependencies](importsSection.md)
 
-The initialisation process for the main index file of a program prepares the rest of the program for its function.
+Programs will need to initialise a set of variables, constants, and function definitions when they are executed. This program is no exception - indeed, there are two stages of initialisation:
+1. The first initialisation process when the bot starts up
+2. The bot's next stage of initialisation whenever it reads a message in Discord
 
-This post will cover two topics:
-1. The initialisation process for the bot when it starts up
-2. The behavior of the bot whenever it reads a message in a Discord server
-
-The reason that, is because a lot of functionality that used to be performed on each message, was either abstracted into a utility, or moved into the initialisation process. It's inefficient to have a program tautologically re-declare a variable or function to be itself over and over.
+The initial commit for the bot didn't organise these two initialisation processes as optimally as it could have, so this post covers the initial commit for the initialisation process & message initialisation
 
 The old initialisation process
 
