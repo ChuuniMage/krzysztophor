@@ -9,7 +9,7 @@ Every programming project needs an main index file, to define the primary behavi
 For the initial github commit, these are the imports:
 - A config.json file that contains the bot keys, to hook the bot into the code
 - The `fs` node File System library for reading & writing files with node
-- The 'Discord.js' library, required for a discord bot written in javascript
+- The `Discord.js` library, required for a discord bot written in javascript
 - A slew of utility functions abstracted during the production of the initial commit, to declutter the main index file
 
 ```typescript
