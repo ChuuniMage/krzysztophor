@@ -41,6 +41,7 @@ The first things the bot does is check if:
 - Define a function to check if members have any of three roles, Moderator, Administrator, or Jay Dyer.
 
 ```typescript
+//client.on("message"... part 2
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
@@ -60,6 +61,7 @@ Next, the bot collects the content of the message, and  parses the message value
   -In a Discord message, what looks like `@Username` or `#channel-name` to a regular user, looks like`<!@12345678912345678>` under the hood to use this ID number, it must be extracted from the message.
 
 ```typescript
+//client.on("message"... part 3
   const commandBody = message.content.slice(prefix.length);
   const args = commandBody.split(" ");
   const command = args.shift().toLowerCase();
@@ -68,14 +70,13 @@ Next, the bot collects the content of the message, and  parses the message value
   let firstArgId = extractNumbersForId(args[0]);
 ```
 
-The next three entries are:
+The next three components are:
 - the memberHasRolesFromArgs function, which reads arguments fed into the bot for if a member has all of the listed roles. 
 - the VIPRoleList array, which is an array of role names that are immune to bot commands such as `kick` or `ban
 - the isMemberVIP function, which tests for whether the user has a VIP role
 
-After those entries, the bot command functions are defined.
-
 ```typescript
+//client.on("message"... part 4
   let memberHasRolesFromArgs = (
     inputMemberCache: Discord.GuildMember
   ): boolean => {
@@ -110,10 +111,11 @@ After those entries, the bot command functions are defined.
   async function executeBotCommand(commandInput) {...// etc
 ```
 
-This is not ideal for the following reasons.
+Clearly, having so many computations being performed every single time a message is posted is not ideal. 
 
-The 1.0 Release initialisation process, as follows, makes the following improvements:
+In the 1.0 Release, I optimised the initialisation process and the on message behavior the following ways:
 - `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to the config.json, to decouple the details of the server itself from the main index file.
+- The `memberHasRolesFromArgs` has been completely changed a
 - `isMemberVIP` function is defined prior, so that it isn't redefiend every time a message event is sent
 - The bot permissions checks have been extracted into the `messageHasBotPermissions` function, to declutter the `on message` event code
 - The initialisation confirmation console log, "The swans have been released!" is moved to the end of the initialisation, rather than the start. Now it's a useful message in the console.
@@ -154,7 +156,7 @@ console.log("The swans have been released!");
 client.on("message", function (currentMessage) //etc...
 ```
 
-After this cleanup and reorganisation, this is what the `client.on("message"...` code looks like.
+After this cleanup and reorganisation, this is what the `client.on("message"...` now code looks like.
 
 ```typescript
 client.on("message", function (currentMessage) {//takes a message object as input
@@ -167,6 +169,12 @@ client.on("message", function (currentMessage) {//takes a message object as inpu
 
   let firstArgId = extractNumbersForId(args[0]);
   let reasonForModeration = args.slice(1, 9999).join(" ");
+  
+async function executeBotCommands (command:string) {...
 ```  
+One other thing has changed: `const fetchCurrentGuildObject = client.guilds.fetch(serverId)` has been relocated here, to ensure that the bot is always fetching the most recent cache. Since it was defining the cache fetch prior to the message event, there was no guarantee that it was fetching the most up-to-date cache possible every time. Overall, this structure is far cleaner and introduces less performance issues.
 
-Far simpler, and less things Next, we will loko at 
+Next, we will look at the bot commands contained in the `executeBotCommands` function.
+
+[>> The argument utilities](argUtils.md)
+[>> The Bot Commands](botCommands.md)
