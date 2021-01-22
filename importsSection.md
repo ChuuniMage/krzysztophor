@@ -34,8 +34,8 @@ import {
 } from "./Utilities/roleUtils";
 ```
 
-Some problems that needed to be cleared up included:
-- Importing the node File System library (`fs`) library for a single function in the main index file
+I noticed these problems needed to be cleared up:
+- Importing the entire `fs` library for a single function in the main index file
 - Redundant imports of the same `applyRoleByIdToUser` and `RemoveRoleByIdFromUser` functions
 - Not enough functions are extracted from the body of the index file into seperate libraries
 
@@ -67,7 +67,7 @@ import {
 } from "./botCommands/botCommands";
 ```
 
-Two major changes were made:
+I made two major changes:
 1. The `fs` dependency is isolated to the `chanUtils.ts` file, rather than being required for the `index.ts` file.
 2. Every command (except for `help`) is abstracted into `botCommands.ts`, which now depends on the lower level components in Utilities.
 
