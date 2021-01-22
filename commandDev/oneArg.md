@@ -33,7 +33,14 @@ In this post, we'll cover the commands which take one argument as their input. T
         break;
 ```
 
-The new `join` command is split into two asynchronous functions, and a type definition:
+The new `join` command is split into two asynchronous functions, and a type definition. The type definition, and one of those functions, are extracted to the `chanUtils.ts` file, which is a dependency of `botCommands.ts` .
+
+The type definition defines an object that we want to return with , a set of three values
+  - `discordJoinDate`, the date the user joined Discord
+  - `serverJoinDate`, the date the user joined the server
+  - `memberName`, The user's name.
+  
+The `returnJoinDates` function asynchronously fetches the data we need for our `joinCommand` function, in a similar way to, and returns our `joinDateObject` with the values associated.
 
 ```typescript
 type joinDateObjectType = {
@@ -42,7 +49,8 @@ type joinDateObjectType = {
   memberName:string
 }
 
-export let returnJoinDates = async (inputGuildObject:Discord.Guild, inputUser:string):Promise<joinDateObjectType> => {
+export let returnJoinDates = async (inputGuildObject:Discord.Guild, 
+inputUser:string):Promise<joinDateObjectType> => {
   let testedMember:Discord.GuildMember = await inputGuildObject.members.fetch(inputUser);
   let joinDateObject:joinDateObjectType = {
     discordJoinDate: testedMember.user.createdAt.toDateString(),
@@ -53,7 +61,15 @@ export let returnJoinDates = async (inputGuildObject:Discord.Guild, inputUser:st
   }
 ```
 
+So, there are numerous important differences in the final implementation of the `joinCommand` function:
+- Since the function has been abstracted out of the main index file, it now requires three arguments:
+  1. The Server's cache, a `Discord.Guild` object
+  2. The queried user's ID 
+  3. The message `Discord.Message` that told the bot what to do
+  
+Taking in the `Discord.Guild` object, and the `Discord.Message` object is a common update to all of the extracted functions, in order to make them extractable. Previously, they were both global variables that were referenced within the main body of the function.
 
+The final addition to the function, which is a common adition to all of the extracted functions, is an async catch block, which does a better job. Previously, all  `(!firstArgId)` was doing was checking to see if the value was null, but this doesn't catch the case where a user's name is an invalid input. Now, the function properly handles all failures to fetch the Discord user.
 
 ```typescript
 export let joinCommand = async (inputGuildObject:Discord.Guild, 
@@ -72,3 +88,4 @@ export let joinCommand = async (inputGuildObject:Discord.Guild,
 }
 ```
 
+- [Zero argument commmands](commandDev/zeroArgs.md)
