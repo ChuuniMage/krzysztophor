@@ -23,7 +23,11 @@ export const extractNumbersForId = (userInput:string|undefined):string|undefined
 }
 ```
 
-In the previous post, we had the `memberHasRolesFromArgs` function extracted from the message event. 
+In the previous post, we had the `memberHasRolesFromArgs` function extracted from the message event. This function, used for the `howmanyare` and `whois` bot Commands, which both take in an arbitrary amount of roles from arguments, and checks if a member has all of those roles, works in the following way:
+- Takes a Discord member as an argument
+- The length of the global `args` variable array defines the amount of roles expected to be found on the member in `fullRolesCount`, and initialises a running counter `hasRolesCount` to match against this expected amount.
+- A `for` loop is defined to iterate over every role in `args`, and increment the counter for every role of those that is found on the user.
+- Finally, function returns a boolean: true if the user has all of the roles given to the function, false otherwise.
 
 ```typescript
   let memberHasRolesFromArgs = (
@@ -44,8 +48,28 @@ In the previous post, we had the `memberHasRolesFromArgs` function extracted fro
   };
 ```
 
-However, this function wasn't retained - instead, 
+It was clutter in the main index file, and relied too heavily on referencing an outside global variable, and so I had to find away to extract and change it. Ultimately, the function wasn't retained - this is because I already had an utility function that performs an almost identical task, the `memberHasAllRolesById` function, in `roleUtils.ts`
 
+```typescript
+    export const memberHasAllRolesById = (testedMember:Discord.GuildMember, roleIdArray:string[]):boolean => {
+      let matchGoal = roleIdArray.length;
+      let runningCounter = 0;
+      let rolesArray = testedMember.roles.cache.array();
+        for (let i = 0; i < roleIdArray.length; i++){
+        let currentRoleNameTested = roleIdArray[i];
+        for (let a = 0; a < rolesArray.length; a++){
+          let testedRoleName = rolesArray[a].id;
+            if (testedRoleName === currentRoleNameTested){
+              runningCounter++;
+              }
+            }
+          }
+          return runningCounter === matchGoal;
+        }
+```
+All this function needs is the tested Discord member, and an array of IDs to see if they have the roles.
+
+With this in mind, the answer to the problem is not a custom function that reads global state, but a function of smaller scope that takes an array of arguments and returns an array of IDs extracted from the arguments. This is very easy to do, since we use our previously defined `extractNumbersForId` function and place it here.
 
 ```typescript
 export let returnIdArrayFromArgs = (inputArgs:string[]):string[] => {
@@ -56,4 +80,7 @@ export let returnIdArrayFromArgs = (inputArgs:string[]):string[] => {
   return outputIdArray;
 }
 ```
+
+In the next post, we will cover the setup of the Bot Commands.
+
 [>> The Bot Commands](botCommands.md)
