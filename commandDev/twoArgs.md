@@ -4,4 +4,4 @@
 
 [< Back to Zero argument commmands](zeroArgs.md)
 
-[>> Arbitrary argument commmands](twoArgs.md)
+[>> Arbitrary argument commmands](arbitraryArgs.md)
