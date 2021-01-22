@@ -1,8 +1,8 @@
 # argUtils.ts - the Argument Utilities
 
-[<< Back to Project Overview](defenderProject.md)
+[<< Back to Project Overview](../defenderProject.md)
 
-[< Back to Initialisation & behavior on Message](initialisationAndOnMessage.md)
+[< Back to Utilities](../utilities.md)
 
 One of the three utilities files the bot implements is argUtils.ts, which contains two utility functions for parsing arguments.
 
@@ -50,7 +50,7 @@ In the previous post, we had the `memberHasRolesFromArgs` function extracted fro
   };
 ```
 
-It was clutter in the main index file, and relied too heavily on referencing an outside global variable, and so I had to find away to extract and change it. Ultimately, the function wasn't retained - this is because I already had an utility function that performs an almost identical task, the `memberHasAllRolesById` function, in `roleUtils.ts`
+This was clutter in the main index file, and relied too heavily on referencing global variables, so I had to find away to extract and change it. Ultimately, the function wasn't retained - this is because I already had an utility function that performs an almost identical task, the `memberHasAllRolesById` function, in `roleUtils.ts`
 
 ```typescript
     export const memberHasAllRolesById = (testedMember:Discord.GuildMember, roleIdArray:string[]):boolean => {
