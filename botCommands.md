@@ -61,42 +61,43 @@ Boilerplate sucks. The purpose of this boilerplate is to test if there is a vali
 To sort this out, we change the `executeBotCommands` function to be a bottleneck for checks like this, so that the bot commands cannot be called with an invalid number of arguments.
 
 ```typescript
-let executeBotCommands = (command:string) => {
+async function executeBotCommands (command:string) {
+  let currentGuildObject:Discord.Guild = await fetchCurrentGuildObject
+  
   let lengthOfArgs = args.length
   switch(lengthOfArgs){
   case(0):
-    zeroArgumentBotCommands(command)
+    zeroArgumentBotCommands(currentGuildObject, command)
     break;
   case(1):
-    oneArgumentBotCommands(command)
-    arbitraryArgumentBotCommands(command);
+    oneArgumentBotCommands(currentGuildObject, command)
+    arbitraryArgumentBotCommands(currentGuildObject, command);
     break;
   case(2): 
-    oneArgumentBotCommands(command) // To account for reasonmessage
-    twoArgumentBotCommands(command)
-    arbitraryArgumentBotCommands(command);
+    oneArgumentBotCommands(currentGuildObject, command) // To account for reasonmessage
+    twoArgumentBotCommands(currentGuildObject, command)
+    arbitraryArgumentBotCommands(currentGuildObject, command);
     break;
   default:
-    arbitraryArgumentBotCommands(command);
+    arbitraryArgumentBotCommands(currentGuildObject, command);
     break;
   }
 }
 ```
 
-So where does our `join` command go now? It's the first switch case in the the `oneArgumentBotCommands` function.
+So where does our `join` command go now? It's the first switch case in the `oneArgumentBotCommands` function.
 
 ```typescript
-async function oneArgumentBotCommands(commandInput) {
-  let currentGuildObject = await fetchCurrentGuildObject;
+async function oneArgumentBotCommands(inputGuildObject:Discord.Guild, commandInput) {
   switch (commandInput) {
   case "join": // =join @user
     let joinTestUser = firstArgId;
-    joinCommand(currentGuildObject,joinTestUser,currentMessage)
+    joinCommand(inputGuildObject,joinTestUser,currentMessage)
     break;
 ```
 
 As mentioned in the [Folder Structure, Imports and Dependencies](importsSection.md) post, the `join` function has been abstracted into an imported `joinCommand` function.
 
-In the next post, we'll see how `join`, and other one argument commands, have been changed. 
+In the next post, we'll see how `join`, and other one argument commands, have been updated to support this abstraction.
 
 [>> One argument commmands](commandDev/oneArg.md)
