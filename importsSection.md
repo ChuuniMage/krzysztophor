@@ -94,5 +94,5 @@ This is because, apart from a couple of imported utilities, all of the utilities
 
 The next post will detail the initialisation of the index file, as well as the behavior every time the bot detects a message has been posted to Discord.
 
-[>> Initialisation & behavior on Message](initialisationAndOnMessage.md)
+[>> Initialisation & Message Initialisation](initialisationAndOnMessage.md)
       
