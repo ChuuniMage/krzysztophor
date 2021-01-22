@@ -2,6 +2,8 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
+[< Back to Folder Structure, Imports and Dependencies](importsSection.md)
+
 The initialisation process for the main index file of a program prepares the rest of the program for its function.
 
 This post will cover two topics:
