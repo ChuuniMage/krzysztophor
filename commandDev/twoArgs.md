@@ -2,6 +2,6 @@
 
 [<< Back to Project Overview](../defenderProject.md)
 
-[< Back to Zero argument commmands](commandDev/zeroArgs.md)
+[< Back to Zero argument commmands](zeroArgs.md)
 
-[>> Arbitrary argument commmands](commandDev/twoArgs.md)
+[>> Arbitrary argument commmands](twoArgs.md)
