@@ -4,13 +4,13 @@
 
 [< Back to Introduction](introduction.md)
 
-Every programming project needs an main index file, to define the primary behavior of the program. This post details the imports & dependencies of the this main index file, as well as the folder structure of the project that reflects these imports & dependencies. Since this post is for the imports, dependencies, and folder structure, the details of the functions and imports in question will be skimmed over for now.
+Every programming project needs an main index file, to define the primary behavior of the program. This post details the imports & dependencies of this main index file, as well as the folder structure of the project. The details of the functions will be addressed in later posts.
 
-For the initial commit, these are the imports:
-- A config file that contains bot keys & server IDs
-- The fs library for reading & writing files with node
-- The 'Discord.js' library, since this of course is a discord bot
-- A slew of utility functions abstracted from the production of the initial commit, to declutter the main index file
+For the initial github commit, these are the imports:
+- A config.json file that contains the bot keys, to hook the bot into the code
+- The `fs` node File System library for reading & writing files with node
+- The 'Discord.js' library, required for a discord bot written in javascript
+- A slew of utility functions abstracted during the production of the initial commit, to declutter the main index file
 
 ```typescript
 const config = require("./config.json");
@@ -39,7 +39,7 @@ Some problems that needed to be cleared up included:
 - Redundant imports of the same `applyRoleByIdToUser` and `RemoveRoleByIdFromUser` functions
 - Not enough functions are extracted from the body of the index file into seperate libraries
 
-The 1.0 Release imports section looks like this:
+The production release imports section looks like this:
 
 ```typescript
 const config = require("./config.json");
@@ -68,9 +68,9 @@ import {
 ```
 
 1. The `fs` dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
-2. Every command (except for Help) is abstracted into botCommands.ts, which now depends on the lower level components in Utilities.
+2. Every command (except for `help`) is abstracted into botCommands.ts, which now depends on the lower level components in Utilities.
 
-This change in dependency structure naturally requires an update in folder structure to accomodate. The Utility functions need to be decoupled from the index file, and which should be reflected in an updated folder structure. This decoupling means the index file remains untouched if the implementation of any imported function is updated, so the high level structure of the program is stable.
+The folder structure of a project should naturally reflect the internal dependency structure of the project. The Utility functions, extracted from the index file, have their own folder. This decoupling means that, if the internal behavior of the utility functions changes, the index file does not need to be touched at all, lending structural stability to the project.
 
 The pre-release folder structure was:
 
@@ -89,6 +89,8 @@ The release folder structure is:
     - botCommands.ts contains bot command functions, extracted from index.ts
       - ./botCommands/Utilities folder *(unchanged)*
       
+This is because, apart from a couple of imported utilities, all of the utilities are now exclusively dependencies of the `botCommands.ts` file. Now, the internal functioning of each command can change.
+
 The next post will detail the initialisation of the index file, as well as the behavior every time the bot detects a message has been posted to Discord.
 
 [>> Initialisation & behavior on Message](initialisationAndOnMessage.md)
