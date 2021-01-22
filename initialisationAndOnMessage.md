@@ -10,7 +10,12 @@ Programs will need to initialise a set of variables, constants, and function def
 
 The initial commit for the bot didn't organise these two initialisation processes as optimally as it could have, so this post covers the initial commit for the initialisation process & message initialisation
 
-The old initialisation process
+The initial commit's initialisation process does the following:
+- Instantiates a new `Discord.Client()` object, so we can access the associated methods on the object.
+- Log into the Discord as a bot user, with the bot token specified in the config.json.
+- Initialise the prefix being used to parse user messages for bot commands.
+- Provide the ID for the server the bot is to join into.
+- Define a constant for the Promise of a Discord Guild object cache.
 
 ```typescript
 console.log("The swans have been released!"); // console log to declare the bot has been initialised
@@ -22,26 +27,19 @@ const serverId = "780615987857850368"; // Swan Hatchery(test server) ID
 const fetchCurrentGuildObject = client.guilds.fetch(serverId);
 ```
 
-This initiliastion does the following:
-- Instantiates a new `Discord.Client()` object, so we can access the associated methods on the object.
-- Log into the Discord as a bot user, with the bot token specified in the config.json.
-- Initialise the prefix being used to parse user messages for bot commands.
-- Provide the ID for the server the bot is to join into.
-- Define a constant for the Promise of a Discord Guild object cache.
-
-After this initialisation, the `client.on` method is called, which defines a behavior for every time a specified event occurs from the perspective of the bot. We specify in this function to perform this operation on every Discord message event with:
+After this initialisation, the `client.on` method is called, which defines a behavior for every time the specified event occurs. In this case, the specified event is a discord message
 
 ```typescript
-client.on("message", function (message) {
+client.on("message", function (message) {// insert rest of function here
 ```
 
-The first things the bot does is check if:
-- The author of the message is a bot; and if so, terminate the operation.
-- Check if the message starts with the prefix `=`, and if not, terminate the operation.
-- Define a boolean to check if the member who made the post has any of three roles, Moderator, Administrator, or Jay Dyer. The details of the `memberHasAnyRoleByName` function will be covered in a later post.
+The bot first makes a serise of boolean tests:
+- If the author of the message is a bot; and if so, terminate the operation.
+- If the message starts with the prefix `=`, and if not, terminate the operation.
+- If the member who made the post has any of three roles, Moderator, Administrator, or Jay Dyer(the owner of the server). The details of the `memberHasAnyRoleByName` function will be covered in a later post.
 
 ```typescript
-//client.on("message"... part 2
+//client.on("message", function (message) { // part 2
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
 
@@ -55,10 +53,10 @@ The first things the bot does is check if:
 
 Next, the bot collects the content of the message, and  parses the message values in different variables for the following purposes:
 - `args`, which is an array of strings, tokens to use for our arguments
-- `command`, which extracts first argument token, to determine the command our bot performs
-- `reasonMessage`, which stores in the case of a command such as `=kick @User For being a nuisance."
-- `firstArgId`, which extracts the ID string from the first argument after the command input. The `extractNumbersForId` function returns a string parsed with a regular expression to exclude all characters except for numbers.
-  -In a Discord message, what looks like `@Username` or `#channel-name` to a regular user, looks like`<!@12345678912345678>` under the hood to use this ID number, it must be extracted from the message.
+- `command`, which is removed from the first element of the args array to determine the command our bot performs
+- `reasonMessage`, which stores a string in case a command such as `kick` is called, to append the reason for usage of the command, (ie, `=kick @User For being a nuisance.`)
+- `firstArgId`, which extracts the ID string from the first argument remaining in `args`. The `extractNumbersForId` function returns a string parsed with a regular expression to exclude all characters except for numbers.
+  -In a Discord message, what looks like `@Username` or `#channel-name` to a regular user, looks like`<!@12345678912345678>` or `<!#12345678912345678>` under the hood to use this ID number, it must be extracted from the message.
 
 ```typescript
 //client.on("message"... part 3
@@ -71,9 +69,9 @@ Next, the bot collects the content of the message, and  parses the message value
 ```
 
 The next three components are:
-- The memberHasRolesFromArgs function, used later in the body of the message function, reads arguments fed into the bot for if a member has all of the listed roles. 
-- The VIPRoleList array, which is an array of role names that are immune to bot commands such as `kick` or `ban
-- The isMemberVIP function, which tests for whether the user has a VIP role
+- The `memberHasRolesFromArgs` function, tests a member's roles against the roles provided in `args`. The details of this function will be covered in the [next post](argUtils.md). 
+- The `VIPRoleList` array, an array of role names granted immunity to commands such as `kick` or `ban`
+- The `isMemberVIP` function, which tests whether the user has a VIP role
 
 ```typescript
 //client.on("message"... part 4
@@ -113,12 +111,12 @@ The next three components are:
 
 Clearly, having so many computations being performed every single time a message is posted is not ideal. 
 
-In the 1.0 Release, I optimised the initialisation process and the on message behavior the following ways:
+For the production release, I optimised the initialisation process and the message initialisation behavior the following ways:
 - `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to the config.json, to decouple the details of the server itself from the main index file.
-- The `memberHasRolesFromArgs` has been abstracted and changed. The following post will explicate the details around its previous implementation, and how it has changed.
+- The `memberHasRolesFromArgs` has been abstracted and changed. The [following post](argUtils.md) will explicate the details around its previous implementation, and how it has changed.
 - `isMemberVIP` function is defined prior, so that it isn't redefiend every time a message event is sent
-- The bot permissions checks have been extracted into the `messageHasBotPermissions` function, to declutter the `on message` event code
-- The initialisation confirmation console log, "The swans have been released!" is moved to the end of the initialisation, rather than the start. Now it's a useful message in the console.
+- The bot permissions checks have been extracted into the `messageHasBotPermissions` function, and moved into the setup initialisation, to declutter the Message initialisation
+- The console log, `The swans have been released!"` is moved to the end of the setup initialisation, rather than the start. Now it's a useful message in the console to verify it's initialisation.
 
 ```typescript
 const client = new Discord.Client();
@@ -156,7 +154,7 @@ console.log("The swans have been released!");
 client.on("message", function (currentMessage) //etc...
 ```
 
-After this cleanup and reorganisation, this is what the `client.on("message"...` now code looks like.
+After this cleanup and reorganisation, this is what the Message Initialisation code looks like.
 
 ```typescript
 client.on("message", function (currentMessage) {//takes a message object as input
@@ -172,7 +170,7 @@ client.on("message", function (currentMessage) {//takes a message object as inpu
   
 async function executeBotCommands (command:string) {...
 ```  
-One other thing has changed: `const fetchCurrentGuildObject = client.guilds.fetch(serverId)` has been relocated here, to ensure that the bot is always fetching the most recent cache. Since it was defining the cache fetch prior to the message event, there was no guarantee that it was fetching the most up-to-date cache possible every time. Overall, this structure is far cleaner and introduces less performance issues.
+One other thing has changed: `const fetchCurrentGuildObject = client.guilds.fetch(serverId)` has been relocated here, to ensure that the bot is always fetching the most recent cache. Since it was defining the cache fetch prior to the message event, there was no guarantee that it was fetching the most up-to-date cache possible every time. Overall, the release structure is far cleaner than the initial commit.
 
 Before we look at the commands themselves,  we will look at the Argument-Parsing Utility functions.
 
