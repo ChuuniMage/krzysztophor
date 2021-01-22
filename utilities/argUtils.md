@@ -83,6 +83,6 @@ export let returnIdArrayFromArgs = (inputArgs:string[]):string[] => {
 }
 ```
 
-In the next post, we will cover the setup of the Bot Commands.
+Since we've already gotten a sneak peek at the Role Utilities with `memberHasAllRolesById`, we will cover the rest of the Role Utilities in the next post.
 
-[>> The Bot Commands](botCommands.md)
+[>> roleUtils.ts - The Role Utilities](roleUtils.md)
