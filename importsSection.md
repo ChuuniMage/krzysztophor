@@ -67,6 +67,7 @@ import {
 } from "./botCommands/botCommands";
 ```
 
+Two major changes were made:
 1. The `fs` dependency is isolated to the chanUtils.ts file, rather than being required for the index.ts file.
 2. Every command (except for `help`) is abstracted into botCommands.ts, which now depends on the lower level components in Utilities.
 
