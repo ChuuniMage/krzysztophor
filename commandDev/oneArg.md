@@ -2,7 +2,7 @@
 
 [<< Back to Project Overview](../defenderProject.md)
 
-[< Back to The Bot Commands](botCommands.md)
+[< Back to The Bot Commands](../botCommands.md)
 
 In this post, we'll cover the commands which take one argument as their input. The first one we cover is the `join` command.
 
@@ -90,4 +90,4 @@ export let joinCommand = async (inputGuildObject:Discord.Guild,
 }
 ```
 
-[>> Zero argument commmands](commandDev/zeroArgs.md)
+[>> Zero argument commmands](zeroArgs.md)
