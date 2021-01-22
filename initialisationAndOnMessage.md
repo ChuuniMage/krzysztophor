@@ -56,7 +56,7 @@ Next, the bot collects the content of the message, and  parses the message value
 - `args`, which is an array of strings, tokens to use for our arguments
 - `command`, which extracts first argument token, to determine the command our bot performs
 - `reasonMessage`, which stores in the case of a command such as `=kick @User For being a nuisance."
-- `firstArgId`, which extracts the ID string from the first argument after the command input. 
+- `firstArgId`, which extracts the ID string from the first argument after the command input. The `extractNumbersForId` function returns a string parsed with a regular expression to exclude all characters except for numbers.
   -In a Discord message, what looks like `@Username` or `#channel-name` to a regular user, looks like`<!@12345678912345678>` under the hood to use this ID number, it must be extracted from the message.
 
 ```typescript
@@ -113,9 +113,9 @@ After those entries, the bot command functions are defined.
 This is not ideal for the following reasons.
 
 The 1.0 Release initialisation process, as follows, makes the following improvements:
-- `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to config.json, to decouple the details of the server itself from the main index file.
+- `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to the config.json, to decouple the details of the server itself from the main index file.
 - `isMemberVIP` function is defined prior, so that it isn't redefiend every time a message event is sent
-- The bot permissions checks have been extracted into a function, to declutter the `on message` event code
+- The bot permissions checks have been extracted into the `messageHasBotPermissions` function, to declutter the `on message` event code
 - The initialisation confirmation console log, "The swans have been released!" is moved to the end of the initialisation, rather than the start. Now it's a useful message in the console.
 
 ```typescript
@@ -154,15 +154,13 @@ console.log("The swans have been released!");
 client.on("message", function (currentMessage) //etc...
 ```
 
-
----
-
-This is what the on message code block is
+After this cleanup and reorganisation, this is what the `client.on("message"...` code looks like.
 
 ```typescript
 client.on("message", function (currentMessage) {//takes a message object as input
   if (!messageHasBotPermissions(currentMessage)){return}
   const fetchCurrentGuildObject = client.guilds.fetch(serverId);
+  
   const commandBody = currentMessage.content.slice(prefix.length);
   const args = commandBody.split(" ");
   const command = args.shift().toLowerCase();
@@ -171,3 +169,4 @@ client.on("message", function (currentMessage) {//takes a message object as inpu
   let reasonForModeration = args.slice(1, 9999).join(" ");
 ```  
 
+Far simpler, and less things Next, we will loko at 
