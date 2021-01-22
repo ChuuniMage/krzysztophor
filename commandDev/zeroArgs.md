@@ -2,6 +2,10 @@
 
 [<< Back to Project Overview](../defenderProject.md)
 
+[< Back to One argument commmands](commandDev/oneArg.md)
+
+
+
 ```typescript
 async function zeroArgumentBotCommands(commandInput) {
   let currentGuildObject = await fetchCurrentGuildObject
@@ -34,3 +38,6 @@ async function zeroArgumentBotCommands(commandInput) {
     }
 }
 ```
+
+[>> Two argument commmands](twoArgs.md)
+
