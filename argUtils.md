@@ -6,8 +6,8 @@
 
 One of the three utilities files the bot implements is argUtils.ts, which contains two utility functions for parsing arguments.
 
-The first function, `extractNumbersForId` is unchanged from the initial commit, to the production release.
-- The function returns undefined if given an undefined input, to prevent crash in this event.
+The first function, `extractNumbersForId` is unchanged from the initial commit:
+- The function returns undefined if given an undefined input, to prevent crash if given an undefined input.
 - A regular expression is defined to match digits, numbers from 0-9.
 - The `match` method on string objects returns an array of characters that fit the regular expression's parameters
 - If the array is not null, then it returns a string formed from the `parsedInput`, with the `join()` method.
