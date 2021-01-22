@@ -2,7 +2,7 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
-[< Introduction](introduction.md)
+[< Back to Introduction](introduction.md)
 
 Every programming project needs an main index file, to define the primary behavior of the program. This post details the imports & dependencies of the this main index file, as well as the folder structure of the project that reflects these imports & dependencies. Since this post is for the imports, dependencies, and folder structure, the details of the functions and imports in question will be skimmed over for now.
 
