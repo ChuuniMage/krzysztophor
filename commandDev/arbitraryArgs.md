@@ -89,7 +89,7 @@ inputMessage:Discord.Message) => {
 The initial commit's `whois` command is similar in structure, so I will mention the relevant differences:
 - The `updateArrayForWhoIs` is a similar function to `updateArrayForHowManyAre`, but the array is populated with strings containing information that fit the following format: `"DiscordUser#1234 (Nickname)"`.
 - The ternary operator defines the `nickname` variable as the user's nickname if they have one, or their username if they do not have a nickname for the server.
-- After `iterateOverMembersAndReturnData` executes, the array of username strings is concatonated into a string.
+- After `iterateOverMembersAndReturnData` executes, the array of username strings is concatonated into the `computedPost` string.
 - Then, we check if that string's length is over 2000 characters long, the Discord post length limit. If it is under the limit, the post is made as usual. If it is over the limit, then the post is rendered as a text file, and attached to the post, along with an appropriate error message.
 ```typescript
 case "whois": // =whois @role @role .. etc
@@ -133,9 +133,43 @@ case "whois": // =whois @role @role .. etc
         });
         break;
 ```
-asdf2
 
+This is by far the most awkward function in the initial commit. The production release, however, is greatly improved.
+- The `updateArrayForWhoIs` function is subsumed into the `whoIsCommand` function itself, removing an extraneous callback function
+- `postedUsers` is defined in order to append this string onto `computedPost` later
+- We checks if the first element of the `userNameAndNicknameArray` is undefined, in which case it updates the `postedUsers` string with "No-one." to give a natural language response to zero users being found with the tested roles. If it is defined, then `postedUsers` is the concatenation of all of the usernames.
+- `computedPost` is updated with the `roleNameArray` like in the previous function, and the `postedUsers` string is appended.
+- The `appendTxtFileIfPostTooBig` function from [chanUtils.ts](../utilities/chanUtils.md) is called, feeding in the `computedPost` and the `inputMessage`
 
+```typescript
+export let whoIsCommand = async (inputGuildObject:Discord.Guild, 
+  inputIDs:string[], 
+  inputMessage:Discord.Message) => {
+  let checkedMembers = await inputGuildObject.members.fetch();
+  let usernameAndNicknameArray:string[] = []
+  
+  checkedMembers.forEach((member) => {
+    if (memberHasAllRolesById(member, inputIDs)){
+// Populates array with string entries of this format: "DiscordUser#1234 (Nickname)"
+      let nickname = member.nickname ? member.nickname : member.user.username;
+      usernameAndNicknameArray.push(`${member.user.username}#${member.user.discriminator} (${nickname})`)}
+      })
+        let computedPost:string
+        let postedUsers:string
+        if (usernameAndNicknameArray[0] === undefined){
+          postedUsers = 'No-one.';
+        } else {
+          postedUsers = usernameAndNicknameArray.join(", ")
+        }
+        
+      let roleNameArray = returnRoleIdNameArrayToPost(inputIDs)
+      computedPost = `The users with the roles[${roleNameArray.join(", ")}] are: ${postedUsers}`
+    appendTxtFileIfPostTooBig(computedPost,inputMessage)
+}
+
+```
+
+So now that we've covered the implementation of these functions, what do these look like implemented in the main index file? They've been placed together into the `arbitraryArgumentBotCommands` function.
 
 ```typescript
 async function arbitraryArgumentBotCommands(inputGuildObject:Discord.Guild, commandInput) {
@@ -154,4 +188,6 @@ async function arbitraryArgumentBotCommands(inputGuildObject:Discord.Guild, comm
     }
  ```
 
-[> Summary](../summary.md)
+It couldn't be cleaner. In the next post, we'll be covering arguments that take two commands as inputs.
+
+[> Two Argument Commands](twoArgs.md)
