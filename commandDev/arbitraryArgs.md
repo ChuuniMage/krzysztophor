@@ -4,4 +4,4 @@
 
 [< Back to Two argument commmands](twoArgs.md)
 
-[> Summary](../sumamry.md)
+[> Summary](../summary.md)
