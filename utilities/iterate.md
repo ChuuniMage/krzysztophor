@@ -34,5 +34,55 @@ Was feeding in null values, and using it to update user information. While cute,
 
 Ultimately, this function was scrapped, since instead of providing flexibility and abstraction, it introduced unnecessary rigidity in the direct implementation of each solution, especially since in half of the use cases I was just feeding it null data input! It's replaced with specific implementations of the `.foreach()` method.
 
+These are the ways the function was being called:
+```typescript
+replaceall:
+   iterateOverMembersAndReturnData(
+     undefined,
+     currentGuildObject,
+     hasRoleToReplace,
+     replaceTheRole
+   )
+   
+checkpfp:
+  iterateOverMembersAndReturnData(
+    undefined,
+    currentGuildObject,
+    defaultAvatarCheck,
+    applyCheckPFPRole
+  );
+        
+whois:
+   iterateOverMembersAndReturnData(
+     whoHasRoles,
+     currentGuildObject,
+     memberHasRolesFromArgs,
+     updateArrayForHowManyAre
+   ).then((returnedRoleArray) => {
+     message.channel.send(
+       `Number of users with the following roles[${args.join(", ")}] : ${
+         returnedRoleArray.length
+       }`
+     );
+     
+ howmanyare:
+   iterateOverMembersAndReturnData(
+    returnUsers,
+    currentGuildObject,
+    memberHasRolesFromArgs,
+    updateArrayForWhoIs
+  ).then((returnedArray) => {
+    let computedPost = returnedArray.join(", ");
+    let tooManyUsersToReturn = computedPost.length > 2000;
+    if (!tooManyUsersToReturn) {
+      message.channel.send(`${computedPost}`);
+    } else {
+      fs.writeFileSync("./whoIsFile.txt", computedPost);
+      let fileToAttach = new Discord.MessageAttachment("./whoIsFile.txt");
+      message.channel.send(
+        `Error! There are too many users that match your search! File has been generated with list of users.`,
+        fileToAttach
+      );
+
 
 [>> chanUtils.ts - The Channel Utilities](chanUtils.md)
