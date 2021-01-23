@@ -1,4 +1,4 @@
-# The iterateOverMemebersAndReturnData function
+# The iterateOverMembersAndReturnData function
 
 [<< Back to Project Overview](../defenderProject.md)
 
@@ -7,10 +7,10 @@
 I was very proud of this function from the initial commit. However, it didn't make the cut for the release of the bot. I had a common task - Iterating over members, and returning data, and so I had defined a function that did exactly this.
 
 The structure of this function is rather complex, starting from its inputs:
-- `dataToUpdate`, intentionally typed as the `any` type in order to be as flexible as possible
-- `inputGuild` which is the Discord guild
+- `dataToUpdate`, intentionally an `any` type in order to accomodate for any sort of data that might be fed through the function
+- `inputGuild`, which is the Discord guild the members are part of
 - `fulfillConditionToUpdateData`, a boolean check on the members to determine whether to execute `dataUpdater` or not
-- The `dataUpdater` callback function, which takes two arguments - the Discord member, and the data that requires updating.
+- `dataUpdater`, a callback function, which takes two arguments - the Discord member, and the data that requires updating.
 
 ```typescript
 export const iterateOverMembersAndReturnData = 
@@ -30,34 +30,16 @@ dataUpdater:Function):Promise<any> => {
 }
 ```
 
-Was feeding in null values, and using it to update user information. While cute, the 
+The theory behind this function was to have a flexible, pre-structured function that any data could be fed through, and callbacks could be designed to work with. It was implemented on four bot commands, `whois`, `howmanyare`, `checkPFP`, and `replaceall`. The details of the implementations of these functions, both in the initial commit and in the production release, will be covered in future posts. 
 
-Ultimately, this function was scrapped, since instead of providing flexibility and abstraction, it introduced unnecessary rigidity in the direct implementation of each solution, especially since in half of the use cases I was just feeding it null data input! It's replaced with specific implementations of the `.foreach()` method.
+For now, I will just make note of inputs I was feeding into this function.
 
-These are the four ways the function was being called, with the following issues:
-- As we covered in the [Argument Utilities](utilities/argUtils.md) post, the `memberHasRolesFromArgs` function has been removed. The way it was being called here
 ```typescript
-whois:
-   iterateOverMembersAndReturnData(
-     whoHasRoles, // This is an empty array
-     currentGuildObject,
-     memberHasRolesFromArgs,
-     updateArrayForHowManyAre // New array update callabck
-   )
-     
- howmanyare:
-   iterateOverMembersAndReturnData(
-    returnUsers, // This is an empty array of names
-    currentGuildObject,
-    memberHasRolesFromArgs,
-    updateArrayForWhoIs // This callback updates returnUsers array with usernames
-)
-
 replaceall:
    iterateOverMembersAndReturnData(
      undefined,
      currentGuildObject,
-     hasRoleToReplace,
+     hasRoleToReplace, // Boolean to check if the user has a role - 
      replaceTheRole
    )
    
@@ -68,6 +50,34 @@ checkpfp:
     defaultAvatarCheck,
     applyCheckPFPRole
   );
+  
+whois:
+   iterateOverMembersAndReturnData(
+     whoHasRoles, // This is an empty array
+     currentGuildObject, // The current server
+     memberHasRolesFromArgs, // The function we covered in argUtils.ts
+     updateArrayForHowManyAre // New array update callback, specifically for this command
+   )
+     
+ howmanyare:
+   iterateOverMembersAndReturnData(
+    returnUsers, // This is an empty array of names
+    currentGuildObject,
+    memberHasRolesFromArgs,
+    updateArrayForWhoIs // Another update array callback, specifically for the data of this command
+)
+
 ```
+
+- For `replaceall` and `checkpfp`, I took advantage of the function's structure by feeding in `undefined` into the `dataInput` field, in what I *thought* was a clever way to do effects with a function that supposed to return data, but the longer that I worked on the project, the more absurd and superfluous the solution seemed, and the more problems this caused.
+- In the `replaceall` command, the problem with `replaceTheRole` was absurd - since the `dataUpdater` callback function parameters are different, I have to wrap `removeRoleByIdFromUser` and `AddRoleByIdToUser` in a new `replaceTheRole` function, making superfluous functions for a single use case. Not only that, but one of the inputs fed into this function must be undefined! 
+- An identical issue plagued the `checkpfp` command, where `applyCheckPFPRole` is just a wrapper on `addRoleByNameToUser`, which takes an undefined input as an argument and does nothing with it.
+- For `whois` and `howmanyare`, the `memberHasRolesFromArgs` function was defined in the Message Initialisation portion of the program, and relied on global state. This was the only way to prevent me from having to write identical custom callbacks for the scope of each function. The solution to this problem was covered in the [Argument Utilities](utilities/argUtils.md) post.
+- Two custom array updating functions, `updateArrayForHowManyAre` and `updateArrayForWhoIs`, which are only used once, in the context of both of these functions. This is superfluous function creation, and just increased the boilerplate needed in order to get these functions off of the ground.
+
+
+Ultimately, this function was scrapped, since instead of providing flexibility and abstraction, it introduced unnecessary rigidity and verbosity in the implementation of each solution, especially since in half of the use cases I was just feeding it null data input, just to iterate over the members! 
+
+In the next post, I cover the beginning of the program where the bot commands are executed.
 
 [>> The Bot Commands](../botCommands.md)
