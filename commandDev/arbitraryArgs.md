@@ -55,15 +55,15 @@ case "howmanyare": //howmanyare @role @role .. etc
 ```
 
 The production release implementation of `howmanyare` is much cleaner:
--Three parameters are accepted
+- Three parameters are accepted
   1. The Discord server cache
   2. The IDs being tested on the users of this server
   3. The message that triggered this command
--The members are fetched asynchronously with `await inputGuildObject.members.fetch();`
--The empty array is typed and initialised
--The usernames of each user is pushed, simply as something to populate the array with
--The `roleNameArray` is defined, for posting the roles in the message
--The outputput message is sent
+- The members are fetched asynchronously with `await inputGuildObject.members.fetch();`
+- The empty array is typed and initialised
+- The usernames of each user is pushed, simply as something to populate the array with
+- The `roleNameArray` is defined, for posting the roles in the message
+- The outputput message is sent
 
 ```typescript
 export let howManyAreCommand = async (
