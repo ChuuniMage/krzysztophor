@@ -54,7 +54,11 @@ case "replaceall":
 Since the `discord.js` API doesn't throw any errors, and behaves cleanly when you add a role to a user who already has that role, and when you remove a role from a user that doesn't have that role, this let me heavily streamline the production release of the `replaceall` command; The functionality of `replaceTheRole` is put into into the main body of `replaceAllCommand`, and applies it to each each user indiscriminately. 
 
 ```typescript
-export let replaceAllRolesCommand = async (inputGuildObject:Discord.Guild,inputReplacedRoleId:string,inputNewRoleId:string) => {
+export let replaceAllRolesCommand = async (
+inputGuildObject:Discord.Guild,
+inputReplacedRoleId:string,
+inputNewRoleId:string) => {
+
   let checkedMembers = await inputGuildObject.members.fetch();
   checkedMembers.forEach((member)=> {
     if (memberHasAllRolesById(member,[inputReplacedRoleId])){
