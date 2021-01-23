@@ -113,7 +113,7 @@ Clearly, having so many computations being performed every single time a message
 
 For the production release, I optimised the initialisation process and the message initialisation behavior the following ways:
 - `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to the config.json, to decouple the details of the server itself from the main index file.
-- The `memberHasRolesFromArgs` has been abstracted and changed. The [following post](argUtils.md) will explicate the details around its previous implementation, and how it has changed.
+- The `memberHasRolesFromArgs` has been abstracted and changed. The [Argument Utilities](utilities/argUtils.md) will explicate the details around its previous implementation, and how it has changed.
 - `isMemberVIP` function is defined prior, so that it isn't redefiend every time a message event is sent
 - The bot permissions checks have been extracted into the `messageHasBotPermissions` function, and moved into the setup initialisation, to declutter the Message initialisation
 - The console log, `The swans have been released!"` is moved to the end of the setup initialisation, rather than the start. Now it's a useful message in the console to verify it's initialisation.
