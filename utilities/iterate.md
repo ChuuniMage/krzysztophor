@@ -20,6 +20,8 @@ fulfillConditionToUpdateData:Function,
 dataUpdater:Function):Promise<any> => {
 ```
 
+Then, the function asynchronously fetches the members cache for the server with `await inputGuild.members.fetch()`, and proceeds through applying the callback functions to the input `dataToUpdate`.
+
 ```typescript
  let members = await inputGuild.members.fetch();
  members.forEach((_member) => {
@@ -31,8 +33,6 @@ dataUpdater:Function):Promise<any> => {
  return dataToUpdate;
 }
 ```
-
-Then
 
 The theory behind this function was to have a flexible, pre-structured function that any data could be fed through, and callbacks could be designed to work with. It was implemented on four bot commands, `whois`, `howmanyare`, `checkPFP`, and `replaceall`. The details of the implementations of these functions, both in the initial commit and in the production release, will be covered in future posts. 
 
