@@ -6,7 +6,10 @@
 
 ```typescript
 export const iterateOverMembersAndReturnData = 
-async (dataToUpdate:any, inputGuild:Discord.Guild, fulfillConditionToUpdateData:Function, dataUpdater:Function):Promise<any> => {
+async (dataToUpdate:any, 
+inputGuild:Discord.Guild, 
+fulfillConditionToUpdateData:Function, 
+dataUpdater:Function):Promise<any> => {
  let members = await inputGuild.members.fetch();
  members.forEach((_member) => {
    let isConditionFulfilled: boolean = fulfillConditionToUpdateData(_member);
