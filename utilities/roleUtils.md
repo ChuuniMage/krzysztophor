@@ -163,10 +163,25 @@ export const updateUserRole = {
 }
 ```
 
-Now, with full intellisense support, I can simply refer to `updateUserRole.addRole.byName`, to do the same job as `applyRoleToUserByName`, but with the intellisense doing more of the cognitive heavy lifting for me, and collecting the functions into the `updateUserRole` object.
+Now, with full intellisense support, I can simply refer to this single `updateUserRole` object, and it will show me the `addRole` and `removeRole` properties, and their associated methods `byId` and `byName`. 
 
+Two functions were added in the production release that were not present in the 
+- `hasDefaultPFP`, which tests if a user's profile picture is the default discord profile picture. This function is used later in the `checkPFP` command, which applies the `Change PFP` role to a user, quarantining them away from the rest of the server until they have a non-default display picture. This is a check against freshly made spam & troll accounts. 
+- `returnRoleIdNameArrayToPost`, which utilises the `.map()` method to wrap each role ID given to the function in `<@&` on the left, and `>` on the right, since in discord messages, this is how role IDs are formatted under the hood. To the user, `<@&123456789012345>` typed into a discord chatroom will display as `@ThisIsARole`.
 
+```typescript
+export const hasDefaultPFP = (inputMember:Discord.GuildMember) => {
+  let defaultAvatar:string = inputMember.user.defaultAvatarURL;
+  let displayAvatar:string = inputMember.user.displayAvatarURL();
+  
+  return defaultAvatar === displayAvatar
+} 
 
-The story of this last function deserves its own page: iterateOverMembersAndReturnData
+export const returnRoleIdNameArrayToPost = (inputIDArray:string[]) => {
+  return inputIDArray.map((roleId) => {return "<@&" + roleId + ">"})
+}
+```
 
-[>> The story of iterateOverMembersAndReturnData](iterate.md)
+There is one final function that was in the initial commit, but wasn't in the production release, and that's `iterateOverMembersAndReturnData`. The story of this last function deserves its own page.
+
+[>> The iterateOverMembersAndReturnData Function](iterate.md)
