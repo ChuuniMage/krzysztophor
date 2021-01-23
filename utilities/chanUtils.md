@@ -57,7 +57,7 @@ export let returnJoinDates = async (inputGuildObject:Discord.Guild, inputUser:st
   }
   ```
 
-The final function in the production release is `appendTxtFileIfPostTooBig`, which is intended to be used if the message the bot posts is in danger of being over 2000 characters long. The only command the bot performs that is in danger of being over 2000 lines long is the `whois` command, which will be covered in a future post.
+The final function in the production release is `appendTxtFileIfPostTooBig`, the use case being if bot intends on posting a message potentially over 2000 characters long. The only command that fits this criterea is the `whois` command, which will be covered in a future post.
 
 ```typescript
 export let appendTxtFileIfPostTooBig = (inputPost:string, inputMessage:Discord.Message) => {
