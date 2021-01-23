@@ -1,4 +1,4 @@
-# The iterateOverMembersAndReturnData function
+# The iterateOverMembersAndReturnData Function
 
 [<< Back to Project Overview](../defenderProject.md)
 
