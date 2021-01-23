@@ -2,7 +2,7 @@
 
 [<< Back to Project Overview](../defenderProject.md)
 
-[< Back to roleUtils.ts - The Role Utilities](roleUtils.md)
+[< Back to Utilities](../utilities.md)
 
 The only channel utility in the initial commit was `postInNamedChannel`
 
@@ -57,4 +57,4 @@ export let appendTxtFileIfPostTooBig = (inputPost:string, inputMessage:Discord.M
 ```
 
 
-[> The Bot Commands](../botCommands.md)
+[> argUtils.ts - The Argument Utilities](argUtils.md)
