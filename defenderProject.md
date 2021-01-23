@@ -11,10 +11,11 @@ The purpose of the discord bot is to provide custom quality-of-life commands for
 [Initialisation & Message Initialisation](initialisationAndOnMessage.md)
 
 [Utilities](utilities.md)
+- [chanUtils.ts - The Channel Utilities](utilities/roleUtils.md)
 - [argUtils.ts - The Argument Utilities](utilities/argUtils.md)
 - [roleUtils.ts - The Role Utilities](utilities/roleUtils.md)
   - [The iterateOverMembersAndReturnData Function](utilities/iterate.md)
-- [chanUtils.ts - The Channel Utilities](utilities/roleUtils.md)
+
 
 [The Bot Commands](botCommands.md)
 - [One argument commmands](commandDev/oneArg.md)
