@@ -15,7 +15,7 @@ The purpose of `howmanyare` is to return a number of how many users have all of 
  - If there are 4 members who had the role `@Doctor`, and 2 have the role `@Lawyer`, then typing `=howmanyare @Doctor @Lawyer` would return  `The users with the roles[@Doctor, @Lawyer] are : Jack#1234 (Blackjack), Jill#5656 (UpTheHill)`
  
 First, we'll see `howmanyare`'s initial implementation. 
-- The `!firstArgId` boilerplate is present, taken care of in [relevant post](bluh.md)
+- The `!firstArgId` boilerplate is present, taken care of in the [previous post](../botCommands.md)
 - The `updateArrayForHowManyAre` function is defined, and only used once, in the scope of this function. This pushes a user's name into the array, to be used as a token to track the amount of users who are in the array.
 - `whohasRoles`, an empty array is initialised
 - These newly declared variables are fed into the `iterateOverMembersAndReturnData` function, which was covered in [relevant post]
@@ -54,7 +54,7 @@ case "howmanyare": //howmanyare @role @role .. etc
         break;
 ```
 
-Far cleaner production release implementation of `howmanyare`:
+The production release implementation of `howmanyare` is much cleaner:
 -Three parameters are accepted
   1. The Discord server cache
   2. The IDs being tested on the users of this server
