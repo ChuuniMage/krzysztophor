@@ -1,4 +1,4 @@
-# The story of iterateOverMemebersAndReturnData
+# The iterateOverMemebersAndReturnData function
 
 [<< Back to Project Overview](../defenderProject.md)
 
@@ -7,10 +7,10 @@
 I was very proud of this function from the initial commit. However, it didn't make the cut for the release of the bot. I had a common task - Iterating over members, and returning data, and so I had defined a function that did exactly this.
 
 The structure of this function is rather complex, starting from its inputs:
-- It has been intentionally designed to take any input as its data to update, explicitly making use of mutating data
-- The input discord guild that I am iterating members over
-- A boolean condition to fulfill \
-- A function that takes in 
+- `dataToUpdate`, intentionally typed as the `any` type in order to be as flexible as possible
+- `inputGuild` which is the Discord guild
+- `fulfillConditionToUpdateData`, a boolean check on the members to determine whether to execute `dataUpdater` or not
+- The `dataUpdater` callback function, which takes two arguments - the Discord member, and the data that requires updating.
 
 ```typescript
 export const iterateOverMembersAndReturnData = 
