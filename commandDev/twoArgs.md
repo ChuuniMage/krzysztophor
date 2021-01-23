@@ -10,7 +10,9 @@ For the commands that take two arguments, we have three functions:
 - `dmsg`, which instructs the bot to directly message a particular user
 
 First, let's look at the initial commit's `replaceall` command
-- `hasRoleToReplace` 
+- The `(!firstArgID)` check we find in other functions has another parameter - `(!args[1])` which tests if there is a second argument given or not. These were replaced by the switch statement covered in [Bot Commands](../botCommands.md).
+- `replacedRoleId` and `newRoleId` are defined from the `args` posted in the message
+- `hasRoleToReplace` wraps up `memberHasAllRolesById`, referencing an out-of-scope variable `replacedRoleId`. This
 - `replaceTheRole` wraps up `removeRoleByIdFromUser` and `addRoleByIdToUser` into a single function, and clumsily accepts a dummy void value in order to fit into `iterateOverMembersAndReturnData`
 - Just like `whois` and `howmanyare`, this function used `iterateOveRembersAndReturnData`, but took in `undefined` as its data, since I wasn't returning any data, but altering member data.
 
@@ -61,6 +63,34 @@ export let replaceAllRolesCommand = async (inputGuildObject:Discord.Guild,inputR
       };
   })
 }
+```
+
+```typescript
+      case `msg`: // =msg #channel message
+        if (!firstArgId) {
+          return;
+        }
+        let extractedChannelId = extractNumbersForId(args[0]);
+        const targetChannel = client.channels.cache.get(extractedChannelId);
+        if (!targetChannel) {
+          return;
+        }
+        // @ts-ignore
+        targetChannel.send(reasonMessage); // intellisense complains but this works
+        break;
+```
+
+```typescript
+      case `dmsg`: // =dmsg @user message
+        if (!firstArgId) {
+          return;
+        }
+        let messagedUser = await currentGuildObject.members.fetch(firstArgId);
+        if (!messagedUser) {
+          return;
+        }
+        messagedUser.send(reasonMessage);
+        break;
 ```
 
 ```typescript
