@@ -4,6 +4,8 @@
 
 [< Back to roleUtils.ts - The Role Utilities](roleUtils.md)
 
+I was very proud of this function from the initial commit. However, it didn't make the cut for the release of the bot. I had a common task - Iterating over members, and returning data, and so I had defined a function that did exactly this.
+
 ```typescript
 export const iterateOverMembersAndReturnData = 
 async (dataToUpdate:any, 
