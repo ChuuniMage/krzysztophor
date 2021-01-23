@@ -117,7 +117,7 @@ We needed functions exactly like these, but which took role names as parameters.
 For the production release, I had figured that impornt four very similar functions, and needing to remember all of them was inefficient. So, I rewrote them with the following structure:
 - Just like how writing the same function four times isn't ideal, writing the same function twice is also not ideal, so I wrote `updateUserRoleCurry` to give a branching path to the applyRole and removeRole. `Add` and `Remove` are fed into the function to produce `addRoleToUser` and `removeRoleFromUser`
 
- ```
+ ```typescript
    let updateUserRoleCurry = 
   (addOrRemove:"Add"|"Remove") => 
   async (inputGuildObject:Discord.Guild, 
