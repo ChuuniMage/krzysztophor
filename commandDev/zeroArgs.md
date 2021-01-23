@@ -2,9 +2,7 @@
 
 [<< Back to Project Overview](../defenderProject.md)
 
-[< Back to One argument commmands](commandDev/oneArg.md)
-
-
+[< Back to One argument commmands](oneArg.md)
 
 ```typescript
 async function zeroArgumentBotCommands(commandInput) {
