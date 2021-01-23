@@ -2,7 +2,7 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
-[< Back to argUtils.ts - The Argument Utilities](utilities/argUtils.md)
+[< Back to chanUtils.ts - The Channel Utilities](utilities/chanUtils.md)
 
 The whole purpose of the bot is to perform commands given to it from Discord messages. These posts will cover the structure of the functions of the commands, as well as the higher level structure around implementing these functions into the bot.
 
