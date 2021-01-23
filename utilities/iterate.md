@@ -85,4 +85,4 @@ whois:
       );
 
 
-[>> chanUtils.ts - The Channel Utilities](chanUtils.md)
+[>> The Bot Commands](../botCommands.md)
