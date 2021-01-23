@@ -64,10 +64,30 @@ roleNameArray:string[]):boolean => {
     }
  ```
  
- The `getRoleByName` function gets roles by its name idk what to tell you
+In the initial commit, the next two functions, `applyRoleByIdToUser` and `removeRoleByIdFromUser` applied and removed roles from a user respectively. These were key functions since a applying roles and removing roles from users is the primary task of the bot. These functions are wrappers on the `roles.add()` and `roles.remove()` methods on the Guildmember object, so that we can pass
  
  ```typescript
- export const getRoleByName = async (roleName: string, guildObject:Discord.Guild):Promise<Discord.Role> => {
+export const applyRoleByIdToUser = async (
+  inputRoleId:string, 
+  inputUserId:string, 
+  inputGuildObject:Discord.Guild):Promise<void> => {
+  let currentGuildMemberUser = await inputGuildObject.members.fetch(inputUserId);
+  if (memberHasAllRolesById(currentGuildMemberUser, [inputRoleId])) {return}
+  currentGuildMemberUser.roles.add(inputRoleId);
+};
+
+// removeRoleByIdFromUser is identical, except for the last two lines:
+  if (memberHasAllRolesById(currentGuildMemberUser, [inputRoleId])) {return}
+  currentGuildMemberUser.roles.remove(inputRoleId);
+
+ ```
+ 
+We needed functions exactly like these, but which took role names as parameters. However, the `roles.add()` and `roles.remove()` methods only took Role IDs as erguments - so the intermediary function, `getRoleByName` was written, which asynchronously fetches the `Discord.Role` object according to a name given to.
+ 
+ ```typescript
+ export const getRoleByName = async (
+ roleName: string, 
+ guildObject:Discord.Guild):Promise<Discord.Role> => {
 
     let roleToBeReturned = await guildObject.roles.fetch().then(roles => {
       return roles.cache.find((_role) => _role.name == roleName ) as Discord.Role;
@@ -80,6 +100,8 @@ roleNameArray:string[]):boolean => {
       }
   }
  ```
+ 
+ So, after this `applyRoleByNameToUser` and `RemoveRoleByNameFromUser`
  
 
 
