@@ -77,7 +77,7 @@ export const applyRoleByIdToUser = async (
 };
 
 // removeRoleByIdFromUser is identical, except for the last two lines:
-  if (memberHasAllRolesById(currentGuildMemberUser, [inputRoleId])) {return}
+  if (!memberHasAllRolesById(currentGuildMemberUser, [inputRoleId])) {return}
   currentGuildMemberUser.roles.remove(inputRoleId);
 
  ```
@@ -101,8 +101,72 @@ We needed functions exactly like these, but which took role names as parameters.
   }
  ```
  
- So, after this `applyRoleByNameToUser` and `RemoveRoleByNameFromUser`
+ So, after this was written, implementing `applyRoleByNameToUser` and `RemoveRoleByNameFromUser` was straightforward.
  
+```typescript
+// applyRoleByNameTouser
+  if (memberHasAllRolesByName(currentGuildMemberUser, [inputRoleName])) {return}
+  currentGuildMemberUser.roles.add((await getRoleByName(inputRoleName, inputGuildObject)));
+  
+// removeRoleByNameFromUser
+  if (!memberHasAllRolesByName(currentGuildMemberUser, [inputRoleName])) {return}
+  currentGuildMemberUser.roles.remove((await getRoleByName(inputRoleName, inputGuildObject)));
+
+```
+ 
+For the production release, I had figured that impornt four very similar functions, and needing to remember all of them was inefficient. So, I rewrote them with the following structure:
+- Just like how writing the same function four times isn't ideal, writing the same function twice is also not ideal, so I wrote `updateUserRoleCurry` to give a branching path to the applyRole and removeRole. `Add` and `Remove` are fed into the function to produce `addRoleToUser` and `removeRoleFromUser`
+
+ ```
+   let updateUserRoleCurry = 
+  (addOrRemove:"Add"|"Remove") => 
+  async (inputGuildObject:Discord.Guild, 
+    inputUserId:string, 
+    inputRoleId:string):Promise<void> => {
+
+    let currentGuildMemberUser:Discord.GuildMember = await inputGuildObject.members.fetch(inputUserId)
+    
+    switch (addOrRemove){
+      case 'Add':
+        currentGuildMemberUser.roles.add(inputRoleId);
+      break;
+      case 'Remove':
+        currentGuildMemberUser.roles.remove(inputRoleId)
+      break;
+    }
+  }
+  
+  export let addRoleToUser = updateUserRoleCurry('Add');
+  export let removeRoleFromUser = updateUserRoleCurry('Remove');
+  ```
+Next, I defined two objects: `addRole` and `removeRole`, with two methods on each of them: `byId` and `byName`. Now, all `byName` does is await the Role ID, and call the same `addRoleToUser` function as the `byId` method.
+  
+```typescript
+let addRole = {
+  byId: function(inputGuildObject:Discord.Guild, inputUserId:string, inputRoleId:string){
+    addRoleToUser(inputGuildObject, inputUserId, inputRoleId);
+  },
+  byName: async function(inputGuildObject:Discord.Guild, inputUserId:string, inputRoleName:string){
+    let inputRoleId = (await getRoleByName(inputGuildObject, inputRoleName)).id;
+    addRoleToUser(inputGuildObject, inputUserId, inputRoleId);
+  }
+}
+// the removeRole 
+```
+
+These two objects are then put into a final object, `updateUserRole`, making this object a carrier for my four functions.
+
+```typescript
+export const updateUserRole = {
+  addRole,
+  removeRole,
+}
+```
+
+Now, with full intellisense support, I can simply refer to `updateUserRole.addRole.byName`, to do the same job as `applyRoleToUserByName`, but with the intellisense doing more of the cognitive heavy lifting for me, and collecting the functions into the `updateUserRole` object.
 
 
-[>> chanUtils.ts - The Channel Utilities](chanUtils.md)
+
+The story of this last function deserves its own page: iterateOverMembersAndReturnData
+
+[>> The story of iterateOverMembersAndReturneData](iterate.md)
