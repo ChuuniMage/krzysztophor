@@ -22,11 +22,24 @@ export const postInNamedChannel = (inputGuildObject:Discord.Guild,namedChannel:s
 }
 ```
 
-The next three were in the production release
+Only one change was made to this function in the production release:
+
+```typescript
+export const postInNamedChannel = 
+(namedChannel:string) => 
+(inputGuildObject:Discord.Guild, inputPost:string) => {.../
+```
+The `namedChannel` input was made curryable, in order to define the `postInWarned` function, since posting in this specific channel is a function of many of the bot commands.
 
 ```typescript
 export let postInWarned = postInNamedChannel("🚨-warned-members")
+```
 
+Two more functions and one type definition were in the production release of this bot:
+- `joinDateObjectType`, which defines the output of the `returnJoinDatesFunction`
+- `returnJoinDatesFunction`, which fetches the tested member's date they joined discord, the date they joined the server, and their name.
+
+```typescript
 type joinDateObjectType = {
   discordJoinDate:string,
   serverJoinDate:string
@@ -42,7 +55,11 @@ export let returnJoinDates = async (inputGuildObject:Discord.Guild, inputUser:st
   }
   return joinDateObject;
   }
+  ```
 
+The final function in the production release is `appendTxtFileIfPostTooBig`, which is intended to be used if the message the bot posts is in danger of being over 2000 characters long. The only command the bot performs that is in danger of being over 2000 lines long is the `whois` command, which will be covered in a future post.
+
+```typescript
 export let appendTxtFileIfPostTooBig = (inputPost:string, inputMessage:Discord.Message) => {
     if (inputPost.length < 2000){
       inputMessage.channel.send(inputPost)
@@ -56,5 +73,6 @@ export let appendTxtFileIfPostTooBig = (inputPost:string, inputMessage:Discord.M
 }
 ```
 
+The next post covers the argument utilities.
 
 [> argUtils.ts - The Argument Utilities](argUtils.md)
