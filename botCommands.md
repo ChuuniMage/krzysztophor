@@ -77,8 +77,8 @@ async function oneArgumentBotCommands(inputGuildObject:Discord.Guild, commandInp
     break;
 ```
 
-As covered in [Folder Structure, Imports and Dependencies](importsSection.md), the `join` function has been abstracted into an imported `joinCommand` function.
+As covered in [Folder Structure, Imports and Dependencies](importsSection.md), the `join` case's behaviro has been abstracted into an imported `joinCommand` function.
 
-In the next post, we'll see how `join`, and other one argument commands, have been updated to support this abstraction.
+In the next post, we'll cover the two commands in the suite that take an arbitrary number of arguments.
 
-[>> One argument commmands](commandDev/oneArg.md)
+[>> Arbitrary Argument Commmands](commandDev/arbitraryArgs.md)
