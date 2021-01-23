@@ -2,7 +2,7 @@
 
 [<< Back to Project Overview](../defenderProject.md)
 
-[< Back to Utilities](../utilities.md)
+[< Back to chanUtils.ts - The Channel Utilities](chanUtils.md)
 
 One of the three utilities files the bot implements is argUtils.ts, which contains two utility functions for parsing arguments.
 
