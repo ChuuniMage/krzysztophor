@@ -77,7 +77,7 @@ The pre-release folder structure was:
 
 - ./ Root folder with `index.ts` and `config.json`
   - `index.ts` contains the main function of the program
-  - `config.json `contains information covered in the [initialisation section](initialisation.md)
+  - `config.json `contains information covered in the [next post](initialisation.md)
     - ./Utilities folder with `argUtils.ts`, `chanUtils.ts`, and `roleUtils.ts`
       - `argUtils.ts` contains utility functions for parsing arguments with the bot
       - `chanUtils.ts` contains utility functions for the server channel context
