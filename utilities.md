@@ -4,13 +4,12 @@
 
 [< Initialisation & Message Initialisation](initialisationAndOnMessage.md)
 
-The following three posts cover the utility function files. The purpose of these utility files is to declutter the main index file of the program, and abstract repetitive code into functions that are easy to call. 
+The following three posts cover the utility functions. The purpose of these functions is to declutter the main index file by abstract repetitive code and technical code.
 
-We have the following three utilities files:
-- `chanUtils.ts`, the utilities for interacting with message channels
-- `argUtils.ts`, the utilities for parsing arguments
-- `roleUtils.ts`, the utilities for interacting with user roles
-
+The following three files contain the utility functions:
+- `chanUtils.ts`, contains utilities for interacting with message channels
+- `argUtils.ts`, contains utilities for parsing arguments
+- `roleUtils.ts`, contains utilities for interacting with user roles
 
 First, we'll look at the channel utilities.
 
