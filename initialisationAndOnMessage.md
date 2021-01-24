@@ -33,10 +33,10 @@ After this initialisation, the `client.on` method is called, which defines a beh
 client.on("message", function (message) {// insert rest of function here
 ```
 
-The bot first makes a serise of boolean tests:
-- If the author of the message is a bot; and if so, terminate the operation.
-- If the message starts with the prefix `=`, and if not, terminate the operation.
-- If the member who made the post has any of three roles, Moderator, Administrator, or Jay Dyer(the owner of the server). The details of the `memberHasAnyRoleByName` function will be covered in a later post.
+The bot runs through several boolean tests:
+- If the author of the message is a bot, stop the function.
+- If the message *does not* start with the prefix `=`, stop the function.
+- If the member who made the post *does not* have any of three roles, Moderator, Administrator, or Jay Dyer(the owner of the server), stop the function. The details of the `memberHasAnyRoleByName` function will be covered in a later post.
 
 ```typescript
 //client.on("message", function (message) { // part 2
