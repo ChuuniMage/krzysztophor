@@ -1,6 +1,6 @@
 ## Project Overview
 
-This a blog detailing my first projects learning Typescript – a Discord bot, implementing the the Discord.js API. This showcases the code's development from my initial commit to github, up to the current commit. 
+This a blog detailing my first projects learning Typescript – a Discord bot, implementing the the Discord.js API. These posts showcase the code's development from my initial commit to github, up to the production release.
 
 The purpose of the discord bot is to provide custom quality-of-life commands for the Orthodox Christian discord server’s Administrators & Moderators, and to get practical experience developing a program that has practical use.
 
