@@ -4,11 +4,11 @@
 
 [< Back to Folder Structure, Imports and Dependencies](importsSection.md)
 
-Programs will need to initialise a set of variables, constants, and function definitions when they are executed. This program is no exception - indeed, there are two stages of initialisation:
+Programs need to initialise a set of variables, constants, and function definitions on execution. This program has two stages of initialisation:
 1. The first initialisation process when the bot starts up
 2. The bot's next stage of initialisation whenever it reads a message in Discord
 
-The initial commit for the bot didn't organise these two initialisation processes as optimally as it could have, so this post covers the initial commit for the initialisation process & message initialisation
+This post covers the optimisations made in the initialisation phase of the program from the initial commit to the production release.
 
 The initial commit's initialisation process does the following:
 - Instantiates a new `Discord.Client()` object, so we can access the associated methods on the object.
