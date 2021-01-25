@@ -75,7 +75,7 @@ inputUser:string):Promise<joinDateObjectType> => {
   }
   ```
 
-The final function in the production release is `appendTxtFileIfPostTooBig`. This was the only function that needed the node File System library, `fs`, imported, and only a single function at that - `writeFileSync`.
+The final `chanUtil.ts` function in the production release is `appendTxtFileIfPostTooBig`. This was the only function that needed the node File System library, `fs`, imported, and only a single function at that - `writeFileSync`.
 - The bot accepts three parameters:
   - An `inputPost`, to be tested for length
   - The `inputMessage`, of the user that is operating the bot
