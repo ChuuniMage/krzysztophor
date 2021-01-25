@@ -4,7 +4,7 @@
 
 [< Back to roleUtils.ts - The Role Utilities](roleUtils.md)
 
-I was very proud of this function from the initial commit. However, it didn't make the cut for the release of the bot. I had a common task - Iterating over members, and returning data, and so I had defined a function that did exactly this.
+I was very proud of this function from the initial commit. However, it didn't make the cut for the production release. This post will cover why. 
 
 The structure of this function is rather complex, starting from its inputs:
 - `dataToUpdate`, intentionally an `any` type in order to accomodate for any sort of data that might be fed through the function
