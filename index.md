@@ -1,6 +1,6 @@
 ## Kristopher Dabrowski's Blog
 
-My name is Kristopher Dabrowski, I am learning how to code with my mentor [Alex Houchens](www.google.com). I live in Melbourne, Australia.
+My name is Kristopher Dabrowski, I am learning how to code with my mentor [Alex Houchens](http://www.google.com). I live in Melbourne, Australia.
 
 In my time working a Client Support role, I found that working on technical solutions was the most rewarding. I am learning how to code in Typescript on node js, since Typescript is a growing standard language with a lot of documentation and support, and node JS is a very simple runtime. I enjoy learning about functional programming concepts and principles to implement clean and clear code.
 
