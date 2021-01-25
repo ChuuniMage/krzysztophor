@@ -49,6 +49,11 @@ export let postBoostInfoCommand = async (
 }
 ```
 
+The second function was the `checkpfp` function, which is the final function that implemented the `iterateOverMembersAndReturnData` function.
+- It needed to define two callback functions, to apply them to all of the members the command iterates over
+  - `defaultAvatarCheck`, which tests if the user's default avatar URL is identical to their display avatar URL. Their display URL changes to a custom URL once they upload a custom display picture.
+  - `applyCheckPFPRole`, which is a wrapper on `applyRoleByNameToUser`, which has dummy data fed into it to fulfill the strictures of `iterateOverMembersAndReturnData`.
+
 ```typescript
       case "checkpfp": // =checkpfp
         let defaultAvatarCheck = (inputMember: Discord.GuildMember) => {
@@ -73,7 +78,12 @@ export let postBoostInfoCommand = async (
         );
 ```
 
-The production release implementation was greatly improved
+The production release implementation was greatly improved, after the removal of `iterateOverMembersAndReturnData`
+- The cache of all members in the server is fetched
+- A `.forEach` method is called on the cache of all checked , applying the
+- The `hasDefaultPFP` utility, extracted to `roleUtils.ts`, is applied to each member
+- If the condition is fulfilled, then the `Change PFP` role is applied to the user
+
 ```typescript
 export let checkPFPCommand = async (inputGuildObject:Discord.Guild) => {
   let checkedMembers = await inputGuildObject.members.fetch();
@@ -122,6 +132,8 @@ async function zeroArgumentBotCommands(commandInput) {
     }
 }
 ```
+
+In the next and final post, I will summarise my experience designing and implementing this bot.
 
 [>> Summary](../summary.md)
 
