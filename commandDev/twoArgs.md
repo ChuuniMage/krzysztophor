@@ -69,6 +69,8 @@ inputNewRoleId:string) => {
 }
 ```
 
+Old `msg` command, involved `@ts-ignore` to get the compiler to stop complaining. There was an error with the 
+
 ```typescript
       case `msg`: // =msg #channel message
         if (!firstArgId) {
@@ -83,6 +85,24 @@ inputNewRoleId:string) => {
         targetChannel.send(reasonMessage); // intellisense complains but this works
         break;
 ```
+
+New `msg` command
+- `msgCommandPoster` needs to be, since 
+
+```typescript
+export let msgCommand = async (
+  inputGuildObject:Discord.Guild,
+  inputChannelId:string,
+  inputMessage:Discord.Message,
+  inputPost:string) => {
+
+      const targetChannel = inputGuildObject.channels.cache.get(inputChannelId).name;
+      postInNamedChannel(targetChannel)(inputGuildObject, inputPost).catch(
+        () => inputMessage.channel.send('No channel found')
+      )
+}
+```
+old dmsg
 
 ```typescript
       case `dmsg`: // =dmsg @user message
