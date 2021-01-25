@@ -91,6 +91,12 @@ export let joinCommand = async (inputGuildObject:Discord.Guild,
 ```
 
 The next two commands, `kick` and `ban`, are structurally identical:
+- Do the boilerplate `(!firstAgId)` check
+- Fetch the member to be kicked or banned asynchronously
+- Test if the member has a VIP role, and if they do, abort the function, failing to kick or ban them
+- Apply the `.kick` and `.ban` methods to the user, providing a `reasonMessage` for their banning if applicable. The `.ban` method also requires specifying a number of days in the past from which the user's messages are to be deleted. Since none of the user's messages are to be deleted, this number is set to zero.
+- It feeds the raw input of the first argument into the `message.channel.send` method, so that the kicked or banned user are tagged.
+
 ```typescript
       case "kick": // =kick @user
         if (!firstArgId) {
@@ -105,18 +111,36 @@ The next two commands, `kick` and `ban`, are structurally identical:
         message.channel.send(`${args[0]} has been kicked! ${reasonMessage}`);
         break;
 
-      case "ban": // =ban @user
-        if (!firstArgId) {
-          return;
-        }
-        let bannedUser = await currentGuildObject.members.fetch(firstArgId);
-        if (isMemberVIP(bannedUser)) {
-          return;
-        }
-
+// The following are the only parts of the "ban" case that are different from "kick"
         bannedUser.ban({ days: 0, reason: reasonMessage });
         message.channel.send(`${args[0]} has been banned! ${reasonMessage}`);
-        break;
+```
+
+In the production release of the bot, the kick & ban commands have been extracted and made asynchronous so that they can be imported from `botCommands.ts`, and give an error message if the user isn't found.
+
+```typescript
+export let kickUserCommand = async (inputGuildObject:Discord.Guild, 
+  inputUserId:string, 
+  inputMessage:Discord.Message, 
+  inputReasonMessage?:string):Promise<void> => {
+    
+  await inputGuildObject.members.fetch(inputUserId).then(kickedUser => {
+    if (isMemberVIP(kickedUser)) {
+      return;
+    }
+    kickedUser.kick(inputReasonMessage)
+    postInWarned(inputGuildObject, `<@!${kickedUser.id}> has been kicked! ${inputReasonMessage}`)
+  }).catch(() => {
+    inputMessage.channel.send('No such user found.')
+   }
+  )
+}
+
+// The following is the difference between the "banCommand" function and "kickCommand"
+
+    bannedUser.ban({ days: 0, reason: inputReasonMessage });
+    postInWarned(inputGuildObject, `<@!${bannedUser.id}> has been banned! ${inputReasonMessage}`)
+
 ```
 
 
