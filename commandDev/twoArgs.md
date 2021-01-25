@@ -51,7 +51,7 @@ case "replaceall":
         );
 ```
 
-Since the `discord.js` API doesn't throw any errors, and behaves cleanly when you add a role to a user who already has that role, and when you remove a role from a user that doesn't have that role, this let me heavily streamline the production release of the `replaceall` command; The functionality of `replaceTheRole` is put into into the main body of `replaceAllCommand`, and applies it to each each user indiscriminately. 
+The functionality of the `replaceTheRole` callback is put into into the main body of `replaceAllCommand`, and applies it to each each user indiscriminately. 
 
 ```typescript
 export let replaceAllRolesCommand = async (
@@ -69,13 +69,7 @@ inputNewRoleId:string) => {
 }
 ```
 
-The initial commit's `msg` command worked the following way:
-- Take in two arguments, the `#channel` and the `message`
-- Test if the first argument exists, if it does not, abort the function
-- Extract the channel ID with the `extractNumbersForId` function 
-- Fetch the channel ID
-- Test if the channel exists after being fetched - if not, to not post
-- involved `@ts-ignore` to get the compiler to stop complaining. There was an error with the 
+Old `msg` command, involved `@ts-ignore` to get the compiler to stop complaining. There was an error with the 
 
 ```typescript
       case `msg`: // =msg #channel message
