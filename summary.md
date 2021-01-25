@@ -2,7 +2,7 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
-Throughout this series of blog posts I have demonstrated the following design improvements, from the initial commit of the github project to the production release:
+Throughout this series of blog posts I have demonstrated the following design improvements to the bot's code, from the initial commit of the github project to the production release:
 - Implement better higher-level architecture, fixing multiple lower-level issues by moving the issue's upstream logic
 - Less reliance on higher context-level variables, strengthening the program structure
 - Extracting more functions in order to:
@@ -15,4 +15,4 @@ Throughout this series of blog posts I have demonstrated the following design im
 - Add helpful abstraction when it leads to increased code brevity and intellisense help
 - Remove counterproductive over-abstraction
 
-I look forward to working on more projects like this to increase my programming skill, and acheive gainful employment in web development. :)
+Thank you for reading these posts about my bot project. I look forward to working on more projects like this to increase my programming skill, and acheive gainful employment in web development. :)
