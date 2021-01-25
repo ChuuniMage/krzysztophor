@@ -9,8 +9,8 @@ We have already seen the initial commit's `memberHasAllRolesById`.
 What this function does, is:
 - Set the `matchGoal`, which is the amount of roles that need to be found on the `testedMember`
 - Initialise the `runningCounter` to zero 
-- Define the `rolesArray` as the collection of member role objects, converted into an array 
-- Go through two `for` loops, one through each role ID in the `roleIdArray` to test each one of them against against all of the roles the member has. The second `for` loop iterates over each of those member's roles.
+- Convert the mapped member role objects into a `rolesArray`, since at the time of coding this, I was confident with manipulating arrays
+- Implement two `for` loops, one through each role ID in the `roleIdArray` to test each one of them against against all of the roles the member has. The second `for` loop iterates over each of those member's roles.
 - If there is a matching role name, the `runningCounter` is icremented.
 - The function returns true if the member has all of the roles fed into the function, and false if they do not.
 
@@ -74,8 +74,8 @@ roleNameArray:string[]):boolean => {
       return runningCounter === matchGoal;
     }
  ```
-`memberHasAllRolesById` and `MemberHasAnyRoleByName` have been retained, with the following improvements:\
-- Instead of converting the map of role objects to an array, it has stayed a map.
+`memberHasAllRolesById` and `MemberHasAnyRoleByName` have been retained, with the following improvements:
+- Letting the map of user Roles stay a map, instead of converting to an array.
 - Instead of nested `for` loops, instead we use two `.forEach()` method calls, which are identical for our purposes. This has reduced the amount of clutter & boilerplate needed to implement both functions.
  
  
@@ -116,13 +116,14 @@ export const memberHasAnyRoleByName = (
  
 The next two functions in the initial commit, `applyRoleByIdToUser` and `removeRoleByIdFromUser` applied and removed roles from a users. These functions are effectively wrappers on the `roles.add()` and `roles.remove()` methods from the `GuildMember` object, so that we can pass. 
 
-These functions also check if the user already has the role if they are being added a role, or if they already don't have the role if the role is being removed. These checks were removed for the production release, since the `Discord.js` API is smart enough to handle superfluous additions or removals of roles correctly.
+These functions also check if the user already has the role if they are being added a role, or if they already don't have the role if the role is being removed. 
  
  ```typescript
 export const applyRoleByIdToUser = async (
   inputRoleId:string, 
   inputUserId:string, 
   inputGuildObject:Discord.Guild):Promise<void> => {
+  
   let currentGuildMemberUser = await inputGuildObject.members.fetch(inputUserId);
   if (memberHasAllRolesById(currentGuildMemberUser, [inputRoleId])) {return}
   currentGuildMemberUser.roles.add(inputRoleId);
@@ -153,7 +154,7 @@ We needed functions exactly like these, but which took role names as parameters.
   }
  ```
  
-Implementing `applyRoleByNameToUser` and `RemoveRoleByNameFromUser` was straightforward after this was written.
+Implementing `applyRoleByNameToUser` and `RemoveRoleByNameFromUser` was straightforward after this was written. 
  
 ```typescript
 // applyRoleByNameTouser
@@ -166,9 +167,9 @@ Implementing `applyRoleByNameToUser` and `RemoveRoleByNameFromUser` was straight
 
 ```
  
-For the production release, I had figured that impornt four very similar functions, and needing to remember all of them was inefficient. So, I rewrote them with the following structure:
-- Just like how writing the same function four times isn't ideal, writing the same function twice is also not ideal, so I wrote `updateUserRoleCurry` to give a branching path to the applyRole and removeRole. 
--`Add` and `Remove` are then fed into the `addOrRemove` parameter to produce `addRoleToUser` and `removeRoleFromUser`
+For the production release, I had figured that having four very similar functions, and needing to remember all of them was inefficient. So, I rewrote them with the following structure:
+- Instead of explicating that the functions add or remove roles by ID in their role name they simply add or remove roles
+- The checks for whether the user already had the rule for add, or already didn't have the role for remove, were removed for the production release. I had discovered the `Discord.js` API is smart enough to handle superfluous additions or removals of roles correctly.
 
  ```typescript
   export let addRoleToUser = async (
@@ -183,7 +184,9 @@ For the production release, I had figured that impornt four very similar functio
     //The only change for the removeRoleFromUser function
     currentGuildMemberUser.roles.remove(inputRoleId);
   ```
-Next, I defined two objects: `addRole` and `removeRole`, with two methods on each of them: `byId` and `byName`. Now, all `byName` does is await the Role ID, and call the same `addRoleToUser` function as the `byId` method.
+Next, I defined two objects: `addRole` and `removeRole`, with two methods on each of them: `byId` and `byName`.
+   - `byId` is identical to just calling the `addRoleToUser` function
+   - `byName` takes the role name as a function, and asynchronously fetches the role's ID, which is then fed into the `addRoleToUser` role.
   
 ```typescript
 let addRole = {
@@ -207,9 +210,9 @@ export const updateUserRole = {
 }
 ```
 
-Now, with full intellisense support, I can simply refer to this single `updateUserRole` object, and it will show me the `addRole` and `removeRole` properties, and their associated methods `byId` and `byName`. 
+Now, with full intellisense support, I can simply refer to this single `updateUserRole` object, and it will show me the `addRole` and `removeRole` properties, and their associated methods `byId` and `byName`. Now, if I wanted to remove a role from a user by name, I would type: `updateUserRole.addRole.byName` with the appropriate arguments.
 
-Two functions were added in the production release that were not present in the 
+Two functions were added in the production release:
 - `hasDefaultPFP`, which tests if a user's profile picture is the default discord profile picture. This function is used later in the `checkPFP` command, which applies the `Change PFP` role to a user, quarantining them away from the rest of the server until they have a non-default display picture. This is a check against freshly made spam & troll accounts. 
 - `returnRoleIdNameArrayToPost`, which utilises the `.map()` method to wrap each role ID given to the function in `<@&` on the left, and `>` on the right, since in discord messages, this is how role IDs are formatted under the hood. To the user, `<@&123456789012345>` typed into a discord chatroom will display as `@ThisIsARole`.
 
