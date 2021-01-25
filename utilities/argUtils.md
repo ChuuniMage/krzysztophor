@@ -50,36 +50,32 @@ In the previous post, we had the `memberHasRolesFromArgs` function extracted fro
   };
 ```
 
-This was clutter in the main index file, and relied too heavily on referencing global variables, so I had to find away to extract and change it. Ultimately, the function wasn't retained - this is because I already had an utility function that performs an almost identical task, the `memberHasAllRolesById` function, in `roleUtils.ts`
+This was clutter in the main index file, and relied too heavily on referencing global variables, so I had to find away to extract and change it. Ultimately, the function wasn't retained - I already had a utility function that performs an almost identical task, `memberHasAllRolesById`. All this function needs is the tested Discord member, and an array of IDs to see if they have the roles. I will go into detail how this function works in the following post.
 
 ```typescript
-    export const memberHasAllRolesById = (testedMember:Discord.GuildMember, roleIdArray:string[]):boolean => {
-      let matchGoal = roleIdArray.length;
-      let runningCounter = 0;
-      let rolesArray = testedMember.roles.cache.array();
-        for (let i = 0; i < roleIdArray.length; i++){
-        let currentRoleNameTested = roleIdArray[i];
-        for (let a = 0; a < rolesArray.length; a++){
-          let testedRoleName = rolesArray[a].id;
-            if (testedRoleName === currentRoleNameTested){
-              runningCounter++;
-              }
-            }
-          }
-          return runningCounter === matchGoal;
-        }
-```
-All this function needs is the tested Discord member, and an array of IDs to see if they have the roles.
+export const memberHasAllRolesById = (
+  testedMember:Discord.GuildMember, 
+  roleIdArray:string[]):boolean => {
 
-With this in mind, the answer to the problem is not a custom function that reads global state, but a function of smaller scope that takes an array of arguments and returns an array of IDs extracted from the arguments. This is very easy to do, since we use our previously defined `extractNumbersForId` function and place it here.
+  let matchGoal:number = roleIdArray.length;
+  let runningCounter:number = 0;
+
+  testedMember.roles.cache.forEach(memberRole => {
+    roleIdArray.forEach(inputRoleTested => {
+      if (memberRole.id === inputRoleTested){
+        runningCounter++;
+        }
+    })
+  });
+      return runningCounter === matchGoal;
+    }
+```
+
+With this in mind, the answer to the problem is not a custom function that reads global state, but a function of smaller scope that takes an array of arguments and returns an array of IDs extracted from the arguments. This is very easy to do, with the `.map()` method, since we just map `extractNumbersForId` over each inputARg in the array fed into `returnIdArrayFromArgs`.
 
 ```typescript
 export let returnIdArrayFromArgs = (inputArgs:string[]):string[] => {
-  let outputIdArray:string[] = [];
-  for (let i = 0; i < inputArgs.length; i++) {
-    outputIdArray.push(extractNumbersForId(inputArgs[i]))
-  }
-  return outputIdArray;
+  return inputArgs.map((inputArg) => extractNumbersForId(inputArg))
 }
 ```
 
