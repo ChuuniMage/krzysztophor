@@ -6,4 +6,4 @@ In my time working a Client Support role, I found that working on technical solu
 
 Since there's no replacement for practical hands-on experience, I've started to work on projects. My first completed project is the Orthodox Defender bot, which is a Discord Bot running live on the Orthodox Christian discord server, serving over 5000 members.
 
-You can find my progress writing this bot here: [>> Defender Project](defenderProject.md), posted on January 25, 2021
+You can find my articles about writing this bot here: [>> Defender Project](defenderProject.md), posted on January 25, 2021
