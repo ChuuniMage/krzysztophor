@@ -90,4 +90,77 @@ export let joinCommand = async (inputGuildObject:Discord.Guild,
 }
 ```
 
+The next two commands, `kick` and `ban`, are structurally identical:
+```typescript
+      case "kick": // =kick @user
+        if (!firstArgId) {
+          return;
+        }
+        let kickedUser = await currentGuildObject.members.fetch(firstArgId);
+        if (isMemberVIP(kickedUser)) {
+          return;
+        }
+
+        kickedUser.kick(reasonMessage);
+        message.channel.send(`${args[0]} has been kicked! ${reasonMessage}`);
+        break;
+
+      case "ban": // =ban @user
+        if (!firstArgId) {
+          return;
+        }
+        let bannedUser = await currentGuildObject.members.fetch(firstArgId);
+        if (isMemberVIP(bannedUser)) {
+          return;
+        }
+
+        bannedUser.ban({ days: 0, reason: reasonMessage });
+        message.channel.send(`${args[0]} has been banned! ${reasonMessage}`);
+        break;
+```
+
+
+
+```typescript
+async function oneArgumentBotCommands(inputGuildObject:Discord.Guild, commandInput) {
+
+  switch (commandInput) {
+  case "join": // =join @user
+    let joinTestUser:string = firstArgId;
+    joinCommand(inputGuildObject,joinTestUser,currentMessage)
+    break;
+
+  case "kick": // =kick @user
+    let kickedUserId:string = firstArgId;
+    kickUserCommand(inputGuildObject, kickedUserId, currentMessage, reasonForModeration)
+    break;
+
+  case "ban": // =ban @user
+    let bannedUserId:string = firstArgId;
+    banUserCommand(inputGuildObject, bannedUserId, currentMessage, reasonForModeration)
+    break;
+
+  case "quarantine": // =quarantine @user
+    let quarantinedUserId:string = firstArgId;
+    quarantineCommand(inputGuildObject, quarantinedUserId, currentMessage, reasonForModeration)
+    break;
+
+  case "unquarantine": // =unquarantine @user
+    let unquarantinedUserId:string = firstArgId;
+    unQuarantineCommand(inputGuildObject, unquarantinedUserId, currentMessage, reasonForModeration)
+    break;
+
+  case "warn": // =warn @user
+// Three-stage warning system. 
+// If no warned role, add "Warned" role. 
+// If has "Warned", remove "Warned", add "Warned Twice". 
+// If "Warned Twice", ban.
+    let warnedUserId:string = firstArgId
+    warnCommand(inputGuildObject,warnedUserId,currentMessage,reasonForModeration)
+    break;
+  }
+
+}
+```
+
 [>> Zero argument commmands](zeroArgs.md)
