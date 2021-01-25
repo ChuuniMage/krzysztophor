@@ -134,7 +134,7 @@ case "whois": // =whois @role @role .. etc
         break;
 ```
 
-This is by far the most awkward function in the initial commit. The production release, however, is greatly improved.
+This is by far the most awkward function in the initial commit. It's greatly improved for the production release.
 - The `updateArrayForWhoIs` function is subsumed into the `whoIsCommand` function itself, removing an extraneous callback function
 - `postedUsers` is defined in order to append this string onto `computedPost` later
 - We checks if the first element of the `userNameAndNicknameArray` is undefined, in which case it updates the `postedUsers` string with "No-one." to give a natural language response to zero users being found with the tested roles. If it is defined, then `postedUsers` is the concatenation of all of the usernames.
