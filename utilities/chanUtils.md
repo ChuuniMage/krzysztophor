@@ -25,15 +25,17 @@ inputPost:string) => {
 }
 ```
 
-Only one change was made to this function in the production release: Changing `namedChannel` to be the first input, and making the `postInNamedChannel` function's first input curryable with the `=>` syntax. 
+Two changes were made to this function in the production release: 
+- Changing `namedChannel` to be the first input, making the `postInNamedChannel` function's first input curryable with the fat arrow `=>` syntax. 
+- Making the function asyncronous, so that the whole program doesn't crash if it fails to find the named channel.
 
 ```typescript
 export const postInNamedChannel = 
 (namedChannel:string) => 
-(inputGuildObject:Discord.Guild, inputPost:string) => {.../
+async (inputGuildObject:Discord.Guild, inputPost:string) => {.../
 ```
 
-This way, I can easily define a new function which is intended to post in a specific channel. Now, I can define a new function `postInWarned`, which takes the `inputGuildObject` and `inputPost` arguments, and posts them in the `🚨-warned-members` channel.
+With the arrow function implementation for the `namedChannel` parameter, I can now define a new function `postInWarned`, which takes the `inputGuildObject` and `inputPost` arguments as normal, and but automatically them in the `🚨-warned-members` channel.
 
 ```typescript
 export let postInWarned = postInNamedChannel("🚨-warned-members")
