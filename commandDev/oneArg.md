@@ -65,9 +65,9 @@ inputUser:string):Promise<joinDateObjectType> => {
 
 So, there are numerous important differences in the final implementation of the `joinCommand` function:
 - Since the function has been abstracted out of the main index file, it now requires three arguments:
-  1. The Server's cache, a `Discord.Guild` object
-  2. The queried user's ID 
-  3. The message `Discord.Message` that told the bot what to do
+  - The Server's cache, a `Discord.Guild` object
+  - The queried user's ID 
+  - The message `Discord.Message` that told the bot what to do
   
 Taking in the `Discord.Guild` object, and the `Discord.Message` object is a common update to all of the extracted functions, in order to make them extractable. Previously, they were both global variables that were referenced within the main body of the function.
 
