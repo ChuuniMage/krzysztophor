@@ -69,7 +69,12 @@ inputNewRoleId:string) => {
 }
 ```
 
-Old `msg` command, involved `@ts-ignore` to get the compiler to stop complaining. There was an error with the 
+The `msg` command from the initial commit is as follows:
+- The boilerplate `if (!firstArgId)` check, which tests if the first argument given to the bot even exists
+- A superfluous extraction of the channel id from the first argument, given `firstArgId` already is this ID extraction string
+- The definition of a new constant, `targetChannel`, which is a new `Discord.GuildChannel` object.
+- A check if, after being fetched, this channel actually exists. If it does not exist, then the command's execution is aborted.
+- The `.send` method on the `Discord.Guildmember` channel is called to send a message to this channel. For some mysterious reason, the typescript compiler complains, saying that this method does not exist on the object. According to the `Discord.js` API, this does, and in fact this code when executed, functions correctly. I have added `// #ts-ignore` over this line, in order to force the typescript compiler to ignore this supposed error.
 
 ```typescript
       case `msg`: // =msg #channel message
@@ -86,8 +91,11 @@ Old `msg` command, involved `@ts-ignore` to get the compiler to stop complaining
         break;
 ```
 
-New `msg` command
-- `msgCommandPoster` needs to be, since 
+The production release `msg` command is optimised as suchs:
+- The assignment of the `targetChannel` constant is the same
+- The `postInNamedChannel` utility is called, which allows is to implement a `.catch()` block in case a channel is not found with the given argument's input.
+
+The compiler doesn't complain, and the code is neatly packaged away in the `botCommands.ts` file.
 
 ```typescript
 export let msgCommand = async (
@@ -102,7 +110,8 @@ export let msgCommand = async (
       )
 }
 ```
-old dmsg
+
+The initial commit's `dmsg` command, which sends a message directly to a user, is identical in structure to the previous command, except the `.send` method is called on the `GuildMember` object.
 
 ```typescript
       case `dmsg`: // =dmsg @user message
@@ -116,6 +125,23 @@ old dmsg
         messagedUser.send(reasonMessage);
         break;
 ```
+
+Similarly, the production release `dmsgCommand` is identical in structure to the `msgCommand`.
+```typescript
+export let dmsgCommand = async (inputGuildObject:Discord.Guild,
+  inputUserId:string,
+  inputMessage:Discord.Message,
+  inputPost:string) => {
+
+  await inputGuildObject.members.fetch(inputUserId).then((messagedUser) => {
+    messagedUser.send(inputPost);
+  }).catch(
+    () => inputMessage.channel.send('No user found.')
+  )
+}
+```
+
+These three functions are called in their corresponding switch cases in the `twoArgumentBotCommands` function, which parses the inputs to the functions from the arguments given to the bot, prior to feeding them into the functions.
 
 ```typescript
 async function twoArgumentBotCommands(inputGuildObject:Discord.Guild, commandInput) {
@@ -140,5 +166,7 @@ async function twoArgumentBotCommands(inputGuildObject:Discord.Guild, commandInp
     }
 }
 ```
+
+In the next post, we will cover the commands which take a single argument.
 
 [>> One Argument Commmands](oneArg.md)
