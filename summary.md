@@ -12,6 +12,7 @@ Throughout this series of blog posts I have demonstrated the following design im
 - Remove repeated boilerplate by implementing better architecture (ie, constant repetition of ‘if (!firstArgId) { return }’ 
 - Remove extraneous setup in the Message Initialisation portion of the program, increasing performance
 - Converting maps into arrays to work on them, rather than using the appropriate methods to directly work with maps
-- Over-abstraction leading to counterproductive increase in clutter with `iterateOverMembersAndReturnData`
+- Add helpful abstraction when it leads to increased code brevity and intellisense help
+- Remove counterproductive over-abstraction
 
 I look forward to working on more projects like this to increase my programming skill, and acheive gainful employment in web development. :)
