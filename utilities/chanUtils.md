@@ -32,7 +32,16 @@ Two changes were made to this function in the production release:
 ```typescript
 export const postInNamedChannel = 
 (namedChannel:string) => 
-async (inputGuildObject:Discord.Guild, inputPost:string) => {.../
+async (
+inputGuildObject:Discord.Guild, 
+inputPost:string) => {
+  inputGuildObject.channels.cache.forEach(testedChannel => {
+    if (testedChannel.name === namedChannel){
+      // @ts-ignore
+      return testedChannel.send(inputPost)
+      }
+  });
+}
 ```
 
 With the arrow function implementation for the `namedChannel` parameter, I can now define a new function `postInWarned`, which takes the `inputGuildObject` and `inputPost` arguments as normal, and but automatically them in the `🚨-warned-members` channel.
