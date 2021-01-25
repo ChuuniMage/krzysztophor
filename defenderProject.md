@@ -1,4 +1,6 @@
-## Project Overview
+## Orthodox Defender Project Overview
+
+[<< Return to Main Page](index.md)
 
 This a blog detailing my first projects learning Typescript – a Discord bot, implementing the the Discord.js API. These posts showcase the code's development from my initial commit to github, up to the production release.
 
