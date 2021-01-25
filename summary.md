@@ -2,10 +2,16 @@
 
 [<< Back to Project Overview](defenderProject.md)
 
-The purpose of further development & refactorisation was to 
+Throughout this series of blog posts I have demonstrated the following design improvements, from the initial commit of the github project to the production release:
+- Implement better higher-level architecture, fixing multiple lower-level issues by moving the issue's upstream logic
+- Less reliance on higher context-level variables, strengthening the program structure
+- Extracting more functions in order to:
+  - Declutter the main index file
+  - Keep function behavior as pure as possible, 
+  - Facilitate update of lower-level details without any danger of changing the higher-level architecture
+- Remove repeated boilerplate by implementing better architecture (ie, constant repetition of ‘if (!firstArgId) { return }’ 
+- Remove extraneous setup in the Message Initialisation portion of the program, increasing performance
+- Converting maps into arrays to work on them, rather than using the appropriate methods to directly work with maps
+- Over-abstraction leading to counterproductive increase in clutter with `iterateOverMembersAndReturnData`
 
-The main design flaws I would nut out are:
-1. Reliance on higher level context variable, rather than passing in the variable as an argument
-2. Repeated boilerplate (Constant repetition of ‘if (!firstArgId) { return }’ and ‘await currentGuildObject.whatever.fetch(variable)’ which clutter up the code. Prior to the initial commit, the design pattern was to fetch the guild object in every Bot Command.
-3. Too much setup in the client.on("message"…	   portion of the program
-4. Not enough function extraction into other modules to declutter the main index.ts file
+I look forward to working on more projects like this to increase my programming skill, and acheive gainful employment in web development. :)
