@@ -50,7 +50,7 @@ In the previous post, we had the `memberHasRolesFromArgs` function extracted fro
   };
 ```
 
-This was clutter in the main index file, and relied too heavily on referencing global variables, so I had to find away to extract and change it. Ultimately, the function wasn't retained - I already had a utility function that performs an almost identical task, `memberHasAllRolesById`. All this function needs is the tested Discord member, and an array of IDs to see if they have the roles. I will go into detail how this function works in the following post.
+This was clutter in the main index file, and relied too heavily on referencing global variables, so I had to find away to extract and change it. Ultimately, the function wasn't retained - I already had a utility function that performs an almost identical task, `memberHasAllRolesById`. All this function needs is the tested Discord member, and an array of IDs to see if they have the roles. I detail this function works in the following post.
 
 ```typescript
 export const memberHasAllRolesById = (
