@@ -74,7 +74,8 @@ Taking in the `Discord.Guild` object, and the `Discord.Message` object is a comm
 The final addition to the function, which is a common adition to all of the extracted functions, is an async catch block, which does a better job. Previously, all  `(!firstArgId)` was doing was checking to see if the value was null, but this doesn't catch the case where a user's name is an invalid input. Now, the function properly handles all failures to fetch the Discord user.
 
 ```typescript
-export let joinCommand = async (inputGuildObject:Discord.Guild, 
+export let joinCommand = async (
+  inputGuildObject:Discord.Guild, 
   inputUserId:string, 
   inputMessage:Discord.Message) =>
 {
@@ -116,10 +117,13 @@ The next two commands, `kick` and `ban`, are structurally identical:
         message.channel.send(`${args[0]} has been banned! ${reasonMessage}`);
 ```
 
-In the production release of the bot, the kick & ban commands have been extracted and made asynchronous so that they can be imported from `botCommands.ts`, and give an error message if the user isn't found.
+In the production release of the bot, two changes were made to the kick & ban commands:
+- The commands have been extracted and made asynchronous so that they can be imported from `botCommands.ts`, and give an error message if the user isn't found.
+- The `postInWarned` command is used, instead of `postInNamedMessage`, for brevity's sake
 
 ```typescript
-export let kickUserCommand = async (inputGuildObject:Discord.Guild, 
+export let kickUserCommand = async (
+  inputGuildObject:Discord.Guild, 
   inputUserId:string, 
   inputMessage:Discord.Message, 
   inputReasonMessage?:string):Promise<void> => {
@@ -143,7 +147,42 @@ export let kickUserCommand = async (inputGuildObject:Discord.Guild,
 
 ```
 
+Quarantine and unquarantine are both simple and structurally identical commands
+- The `if (!firstArgId)` boilerplate
+- `applyRoleByNameToUser` or `removeRoleByNameFromUser` are called, given the `"Quarantine"` role name, the `firstArgId`, and the guild object as inputs.
+- `postInNamedChannel` is called, to post a message about the user's quarantine status in the "🚨-warned-members" channel
 
+```typescript
+      case "quarantine": // =quarantine @user
+        if (!firstArgId) {
+          return;
+        }
+        applyRoleByNameToUser("Quarantine", firstArgId, currentGuildObject);
+        postInNamedChannel(
+          currentGuildObject,
+          "🚨-warned-members",
+          `${args[0]} has been quarantined! ${reasonMessage}`
+        );
+        break;
+ ```
+ 
+ In the production release, they were refactored identically to the `kick` and `ban` commands.
+ ```typescript
+ export let quarantineCommand = async (
+  inputGuildObject:Discord.Guild, 
+  inputUserId:string, 
+  inputMessage:Discord.Message, 
+  inputReasonMessage?:string) => {
+  await inputGuildObject.members.fetch(inputUserId).then(()=>{
+    
+    updateUserRole.addRole.byName(inputGuildObject,inputUserId,"Quarantine");
+    postInWarned(inputGuildObject, `<@!${inputUserId}> has been quarantined! ${inputReasonMessage}`)
+  }).catch(() => {
+    inputMessage.channel.send('No such user found.')
+   }
+  )
+}
+```
 
 ```typescript
 async function oneArgumentBotCommands(inputGuildObject:Discord.Guild, commandInput) {
