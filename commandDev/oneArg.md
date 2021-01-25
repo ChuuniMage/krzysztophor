@@ -184,46 +184,6 @@ Quarantine and unquarantine are both simple and structurally identical commands
 }
 ```
 
-```typescript
-async function oneArgumentBotCommands(inputGuildObject:Discord.Guild, commandInput) {
+Since `warn`, the last command of the One Argument commands is very large, I'm going to cover it by itself in the next post.
 
-  switch (commandInput) {
-  case "join": // =join @user
-    let joinTestUser:string = firstArgId;
-    joinCommand(inputGuildObject,joinTestUser,currentMessage)
-    break;
-
-  case "kick": // =kick @user
-    let kickedUserId:string = firstArgId;
-    kickUserCommand(inputGuildObject, kickedUserId, currentMessage, reasonForModeration)
-    break;
-
-  case "ban": // =ban @user
-    let bannedUserId:string = firstArgId;
-    banUserCommand(inputGuildObject, bannedUserId, currentMessage, reasonForModeration)
-    break;
-
-  case "quarantine": // =quarantine @user
-    let quarantinedUserId:string = firstArgId;
-    quarantineCommand(inputGuildObject, quarantinedUserId, currentMessage, reasonForModeration)
-    break;
-
-  case "unquarantine": // =unquarantine @user
-    let unquarantinedUserId:string = firstArgId;
-    unQuarantineCommand(inputGuildObject, unquarantinedUserId, currentMessage, reasonForModeration)
-    break;
-
-  case "warn": // =warn @user
-// Three-stage warning system. 
-// If no warned role, add "Warned" role. 
-// If has "Warned", remove "Warned", add "Warned Twice". 
-// If "Warned Twice", ban.
-    let warnedUserId:string = firstArgId
-    warnCommand(inputGuildObject,warnedUserId,currentMessage,reasonForModeration)
-    break;
-  }
-
-}
-```
-
-[>> Zero argument commmands](zeroArgs.md)
+[>> The Warn Command](warnCommand.md)
