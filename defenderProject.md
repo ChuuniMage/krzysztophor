@@ -21,6 +21,7 @@ The purpose of the discord bot is to provide custom quality-of-life commands for
 - [Arbitrary argument commmands](commandDev/arbitraryArgs.md)
 - [Two argument commmands](commandDev/twoArgs.md)
 - [One argument commmands](commandDev/oneArg.md)
+  - [The Warn Command](commandDev/warnCommand.md)
 - [Zero argument commmands](commandDev/zeroArgs.md)
 
 
