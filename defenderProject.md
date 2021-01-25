@@ -6,6 +6,8 @@ This a blog detailing my first projects learning Typescript – a Discord bot, i
 
 The purpose of the discord bot is to provide custom quality-of-life commands for the Orthodox Christian discord server’s Administrators & Moderators, and to get practical experience developing a program that has practical use.
 
+If you want to look at the code in its public release, the github repository is [here](https://github.com/ChuuniMage/OrthodoxDefender).
+
 [Introduction](introduction.md)
 
 [Folder Structure, Imports and Dependencies](importsSection.md)
