@@ -172,7 +172,7 @@ For the production release, I had figured that having four very similar function
 - The checks for whether the user already had the rule for add, or already didn't have the role for remove, were removed for the production release. I had discovered the `Discord.js` API is smart enough to handle superfluous additions or removals of roles correctly.
 
  ```typescript
-  export let addRoleToUser = async (
+let addRoleToUser = async (
     inputGuildObject:Discord.Guild, 
     inputUserId:string, 
     inputRoleId:string):Promise<void> => {
