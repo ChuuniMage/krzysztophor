@@ -7,7 +7,10 @@
 The only channel utility in the initial commit was `postInNamedChannel`
 
 ```typescript
-export const postInNamedChannel = (inputGuildObject:Discord.Guild,namedChannel:string,inputPost:string) => {
+export const postInNamedChannel = (
+inputGuildObject:Discord.Guild,
+namedChannel:string,
+inputPost:string) => {
   let channelsArray = inputGuildObject.channels.cache.array()
   for (let i = 0; i < channelsArray.length; i++){
     let testedChannel = channelsArray[i].name;
@@ -22,14 +25,15 @@ export const postInNamedChannel = (inputGuildObject:Discord.Guild,namedChannel:s
 }
 ```
 
-Only one change was made to this function in the production release:
+Only one change was made to this function in the production release: Changing `namedChannel` to be the first input, and making the `postInNamedChannel` function's first input curryable with the `=>` syntax. 
 
 ```typescript
 export const postInNamedChannel = 
 (namedChannel:string) => 
 (inputGuildObject:Discord.Guild, inputPost:string) => {.../
 ```
-The `namedChannel` input was made curryable, in order to define the `postInWarned` function, since posting in this specific channel is a function of many of the bot commands.
+
+This way, I can easily define a new function which is intended to post in a specific channel. Now, I can define a new function `postInWarned`, which takes the `inputGuildObject` and `inputPost` arguments, and posts them in the `🚨-warned-members` channel.
 
 ```typescript
 export let postInWarned = postInNamedChannel("🚨-warned-members")
@@ -57,15 +61,24 @@ export let returnJoinDates = async (inputGuildObject:Discord.Guild, inputUser:st
   }
   ```
 
-The final function in the production release is `appendTxtFileIfPostTooBig`, the use case being if bot intends on posting a message potentially over 2000 characters long. The only command that fits this criterea is the `whois` command, which will be covered in a future post.
+The final function in the production release is `appendTxtFileIfPostTooBig`. This was the only function that needed the node File System library, `fs`, imported, and only a single function at that - `writeFileSync`.
+- The bot accepts three parameters:
+  - An `inputPost`, to be tested for length
+  - The `inputMessage`, of the user that is operating the bot
+  - The `fileName` of the text message to be appended to the bot
+
+If the bot is in danger of making a post over 2000 characters long, this function writes out the `inputPost` to a text file in the root directory where the bot's proram is stored, and appends the written text file.
 
 ```typescript
-export let appendTxtFileIfPostTooBig = (inputPost:string, inputMessage:Discord.Message) => {
+export let appendTxtFileIfPostTooBig = (
+inputPost:string, 
+inputMessage:Discord.Message,
+fileName:string) => {
     if (inputPost.length < 2000){
       inputMessage.channel.send(inputPost)
     } else {
-      writeFileSync("./whoIsFile.txt", inputPost);
-      let fileToAttach = new Discord.MessageAttachment("./whoIsFile.txt");
+      writeFileSync(`./${fileName}.txt`, inputPost);
+      let fileToAttach = new Discord.MessageAttachment(`./${fileName}.txt`);
       inputMessage.channel.send(
         `Error! The post is too big. Attacking text file with message contents.`,
         fileToAttach)
