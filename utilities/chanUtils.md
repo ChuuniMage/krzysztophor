@@ -64,6 +64,7 @@ type joinDateObjectType = {
 export let returnJoinDates = async (
 inputGuildObject:Discord.Guild, 
 inputUser:string):Promise<joinDateObjectType> => {
+
   let testedMember:Discord.GuildMember = await inputGuildObject.members.fetch(inputUser);
   let joinDateObject:joinDateObjectType = {
     discordJoinDate: testedMember.user.createdAt.toDateString(),
