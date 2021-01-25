@@ -4,18 +4,29 @@
 
 [< back to argUtils.ts - The Argument Utilities](argUtils.md)
 
-We have already seen `memberHasAllRolesById`, which has remained unchanged since the initial commit to production release.
+We have already seen the initial commit's `memberHasAllRolesById`.
+
+What this function does, is:
+- Set the `matchGoal`, which is the amount of roles that need to be found on the `testedMember`
+- Initialise the `runningCounter` to zero 
+- Define the `rolesArray` as the collection of member role objects, converted into an array 
+- Go through two `for` loops, one through each role ID in the `roleIdArray` to test each one of them against against all of the roles the member has. The second `for` loop iterates over each of those member's roles.
+- If there is a matching role name, the `runningCounter` is icremented.
+- The function returns true if the member has all of the roles fed into the function, and false if they do not.
 
 ```typescript
-    export const memberHasAllRolesById = (testedMember:Discord.GuildMember, roleIdArray:string[]):boolean => {
+    export const memberHasAllRolesById = (
+    testedMember:Discord.GuildMember, 
+    roleIdArray:string[]):boolean => {
+    
       let matchGoal = roleIdArray.length;
       let runningCounter = 0;
       let rolesArray = testedMember.roles.cache.array();
         for (let i = 0; i < roleIdArray.length; i++){
-        let currentRoleNameTested = roleIdArray[i];
+        let currentRoleIdTested = roleIdArray[i];
         for (let a = 0; a < rolesArray.length; a++){
-          let testedRoleName = rolesArray[a].id;
-            if (testedRoleName === currentRoleNameTested){
+          let testedRoleId = rolesArray[a].id;
+            if (testedRoleId === currentRoleIdTested){
               runningCounter++;
               }
             }
@@ -24,14 +35,14 @@ We have already seen `memberHasAllRolesById`, which has remained unchanged since
         }
  ```
 In the initial commit, we have two similar functions:
-- `memberHasAnyRoleByName`, which tests if a server member has any one of the given input roles by their name, not their ID. The function fetchies an array of all of the roles that the tested member has. This function is already utilised in the [Message Initialisation](../initialisationAndOnMessage.md) process to test if the member has permissions to use the bot.
-- `memberHasAllRolesByName`, which tests if the user had all of the roles given. This function was written for completeness sake, but was never called. In the production release, this function was removed.
+- `memberHasAnyRoleByName`, which tests if a server member has any one of the given input roles by their name, not their ID. For this logic check, the `runningCounter` is changed to a `runningBoolean`, and if any of the input roles are found, that boolean is set to true.  This function is used in [Message Initialisation](../initialisationAndOnMessage.md) to verify if the member has permissions to use the bot.
+- `memberHasAllRolesByName`, which tests if the user had all of the roles given by name. This function was written for completeness sake, but was never called. In the production release, this function was removed.
 
 ```typescript
 export const memberHasAnyRoleByName = (
 testedMember:Discord.GuildMember, 
 roleNameArray:string[]):boolean => {
-  let runningCounter = false;
+  let runningBoolean = false;
   let rolesArray = testedMember.roles.cache.array();
     for (let i = 0; i < roleNameArray.length; i++){
     let currentRoleNameTested = roleNameArray[i];
@@ -42,7 +53,7 @@ roleNameArray:string[]):boolean => {
           }
         }
       }
-      return runningCounter;
+      return runningBoolean;
     }
 
 export const memberHasAllRolesByName = (
@@ -63,8 +74,49 @@ roleNameArray:string[]):boolean => {
       return runningCounter === matchGoal;
     }
  ```
+`memberHasAllRolesById` and `MemberHasAnyRoleByName` have been retained, with the following improvements:\
+- Instead of converting the map of role objects to an array, it has stayed a map.
+- Instead of nested `for` loops, instead we use two `.forEach()` method calls, which are identical for our purposes. This has reduced the amount of clutter & boilerplate needed to implement both functions.
  
-In the initial commit, the next two functions, `applyRoleByIdToUser` and `removeRoleByIdFromUser` applied and removed roles from a user respectively. These were key functions since a applying roles and removing roles from users is the primary task of the bot. These functions are wrappers on the `roles.add()` and `roles.remove()` methods on the Guildmember object, so that we can pass
+ 
+ ```typescript
+ export const memberHasAllRolesById = (
+  testedMember:Discord.GuildMember, 
+  roleIdArray:string[]):boolean => {
+
+  let matchGoal:number = roleIdArray.length;
+  let runningCounter:number = 0;
+
+  testedMember.roles.cache.forEach(memberRole => {
+    roleIdArray.forEach(inputRoleTested => {
+      if (memberRole.id === inputRoleTested){
+        runningCounter++;
+        }
+    })
+  });
+      return runningCounter === matchGoal;
+    }
+
+export const memberHasAnyRoleByName = (
+  testedMember:Discord.GuildMember, 
+  roleNameArray:string[]):boolean => {
+
+  let memberHasRoleBool:boolean = false;
+
+  testedMember.roles.cache.forEach(memberRole => {
+    roleNameArray.forEach(roleNameTested => {
+      if (memberRole.name === roleNameTested){
+          memberHasRoleBool = true;
+          }
+        })
+      });
+      return memberHasRoleBool;
+    }
+ ```
+ 
+The next two functions in the initial commit, `applyRoleByIdToUser` and `removeRoleByIdFromUser` applied and removed roles from a users. These functions are effectively wrappers on the `roles.add()` and `roles.remove()` methods from the `GuildMember` object, so that we can pass. 
+
+These functions also check if the user already has the role if they are being added a role, or if they already don't have the role if the role is being removed. These checks were removed for the production release, since the `Discord.js` API is smart enough to handle superfluous additions or removals of roles correctly.
  
  ```typescript
 export const applyRoleByIdToUser = async (
@@ -82,7 +134,7 @@ export const applyRoleByIdToUser = async (
 
  ```
  
-We needed functions exactly like these, but which took role names as parameters. However, the `roles.add()` and `roles.remove()` methods only took Role IDs as erguments - so the intermediary function, `getRoleByName` was written, which asynchronously fetches the `Discord.Role` object according to a name given to.
+We needed functions exactly like these, but which took role names as parameters. However, the `roles.add()` and `roles.remove()` methods only took Role IDs as erguments - so the intermediary function, `getRoleByName` was written, which asynchronously fetches the `Discord.Role` object according to the `roleName `input.
  
  ```typescript
  export const getRoleByName = async (
@@ -90,7 +142,7 @@ We needed functions exactly like these, but which took role names as parameters.
  guildObject:Discord.Guild):Promise<Discord.Role> => {
 
     let roleToBeReturned = await guildObject.roles.fetch().then(roles => {
-      return roles.cache.find((_role) => _role.name == roleName ) as Discord.Role;
+      return roles.cache.find((testedRole) => testedRole.name == roleName ) as Discord.Role;
     });
   
     if (roleToBeReturned === undefined) {
@@ -101,7 +153,7 @@ We needed functions exactly like these, but which took role names as parameters.
   }
  ```
  
- So, after this was written, implementing `applyRoleByNameToUser` and `RemoveRoleByNameFromUser` was straightforward.
+Implementing `applyRoleByNameToUser` and `RemoveRoleByNameFromUser` was straightforward after this was written.
  
 ```typescript
 // applyRoleByNameTouser
@@ -115,29 +167,21 @@ We needed functions exactly like these, but which took role names as parameters.
 ```
  
 For the production release, I had figured that impornt four very similar functions, and needing to remember all of them was inefficient. So, I rewrote them with the following structure:
-- Just like how writing the same function four times isn't ideal, writing the same function twice is also not ideal, so I wrote `updateUserRoleCurry` to give a branching path to the applyRole and removeRole. `Add` and `Remove` are fed into the function to produce `addRoleToUser` and `removeRoleFromUser`
+- Just like how writing the same function four times isn't ideal, writing the same function twice is also not ideal, so I wrote `updateUserRoleCurry` to give a branching path to the applyRole and removeRole. 
+-`Add` and `Remove` are then fed into the `addOrRemove` parameter to produce `addRoleToUser` and `removeRoleFromUser`
 
  ```typescript
-   let updateUserRoleCurry = 
-  (addOrRemove:"Add"|"Remove") => 
-  async (inputGuildObject:Discord.Guild, 
+  export let addRoleToUser = async (
+    inputGuildObject:Discord.Guild, 
     inputUserId:string, 
     inputRoleId:string):Promise<void> => {
 
     let currentGuildMemberUser:Discord.GuildMember = await inputGuildObject.members.fetch(inputUserId)
+    currentGuildMemberUser.roles.add(inputRoleId);
+ }
     
-    switch (addOrRemove){
-      case 'Add':
-        currentGuildMemberUser.roles.add(inputRoleId);
-      break;
-      case 'Remove':
-        currentGuildMemberUser.roles.remove(inputRoleId)
-      break;
-    }
-  }
-  
-  export let addRoleToUser = updateUserRoleCurry('Add');
-  export let removeRoleFromUser = updateUserRoleCurry('Remove');
+    //The only change for the removeRoleFromUser function
+    currentGuildMemberUser.roles.remove(inputRoleId);
   ```
 Next, I defined two objects: `addRole` and `removeRole`, with two methods on each of them: `byId` and `byName`. Now, all `byName` does is await the Role ID, and call the same `addRoleToUser` function as the `byId` method.
   
