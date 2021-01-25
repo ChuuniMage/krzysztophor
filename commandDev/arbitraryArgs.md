@@ -161,9 +161,10 @@ export let whoIsCommand = async (inputGuildObject:Discord.Guild,
         } else {
           postedUsers = usernameAndNicknameArray.join(", ")
         }
-        
-      let roleNameArray = returnRoleIdNameArrayToPost(inputIDs)
-      computedPost = `The users with the roles[${roleNameArray.join(", ")}] are: ${postedUsers}`
+     
+    let roleNameArray = returnRoleIdNameArrayToPost(inputIDs)
+    computedPost = `The users with the roles[${roleNameArray.join(", ")}] are: ${postedUsers}`
+    
     appendTxtFileIfPostTooBig(computedPost,inputMessage,"whoIsFile")
 }
 
