@@ -37,5 +37,5 @@ async function zeroArgumentBotCommands(commandInput) {
 }
 ```
 
-[>> Two argument commmands](twoArgs.md)
+[>> Summary](../summary.md)
 
