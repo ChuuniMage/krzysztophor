@@ -70,7 +70,7 @@ No other changes have been made - including a particularly obvious one, the impl
 
 The reason why the `.forEach` method hasn't been used, is that during the testing of the `.forEach` implementation of this function, a particualarly worrying bug came arose - a user with the `Warned` role would be warned, have it removed, be given the `Warned Twice` role, and then banned for having the newly applied `Warned Twice` role. The `for` implementation allows an early exit from the iterations over the user's roles, keeping them safe from this unintended behavior.
 
-```
+```typescript
 export let warnCommand = async (
   inputGuildObject:Discord.Guild, 
   inputUserId:string, 
