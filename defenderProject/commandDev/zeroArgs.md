@@ -1,16 +1,18 @@
 # Zero argument commands
 
-[<< Back to Project Overview](../defenderProject.md)
+[<< Back to Project Overview](../defenderIndex.md)
 
 [< Back to The Warn Command](warnCommand.md)
 
 There are three commands which take no arguments
+
 - The `boostinfo` command, which fetches information about the Nitro Booster status of the server, which are paid & subscribing Discord members who invest into increasing the bandwidth and capacities of the server.
 - The `checkpfp` command, which tests if a user's profile picture is the default Discord profile picture, and keeps the user in a containment channel if they do.
 
 The initial commit's `boostinfo` command is straightforward:
+
 - Define the `boosterRole` role object, fetching it with `getRoleByName`
-- Fetch the cache of all  members who have this role, by calling the `.members` property on the `Discord.Role` object
+- Fetch the cache of all members who have this role, by calling the `.members` property on the `Discord.Role` object
 - Send a message to the channel this command was called, and in this message posting the following values
   - The Discord Server's `.premiumTier` number number
   - The Discord Server's `.premiumSubscriptionCount` property, since Discord users can purchase multiple subscriptions and assign these subscriptions arbitrarily to boost each discord server
@@ -30,26 +32,31 @@ The initial commit's `boostinfo` command is straightforward:
 ```
 
 The production release `postBoostInfoCommand` is functionally idential to the previous switch case, except for two details:
+
 - The required `await` for the `boosterRole` value has been implemented to make this function work in an extracted context
 - I had discovered the `.size` method the map object, which is analogous in function to the `.length` function for arrays, so I no longer needed to convert the map into an array.
 
-
 ```typescript
 export let postBoostInfoCommand = async (
-  inputGuildObject:Discord.Guild, 
-  inputMessage:Discord.Message) => {
-  let boosterRole:Discord.Role = await getRoleByName(inputGuildObject, "Nitro Booster");
+  inputGuildObject: Discord.Guild,
+  inputMessage: Discord.Message
+) => {
+  let boosterRole: Discord.Role = await getRoleByName(
+    inputGuildObject,
+    "Nitro Booster"
+  );
   let boosterRoleMembers = (await boosterRole).members;
-  
+
   inputMessage.channel.send(
-  `Server is currently at tier: ${inputGuildObject.premiumTier}
+    `Server is currently at tier: ${inputGuildObject.premiumTier}
   Total number of Nitro Boosts: ${inputGuildObject.premiumSubscriptionCount}
   Total number of boosters: ${boosterRoleMembers.size}`
   );
-}
+};
 ```
 
 The second function was the `checkpfp` function, which is the final function that implemented the `iterateOverMembersAndReturnData` function.
+
 - It needed to define two callback functions, to apply them to all of the members the command iterates over
   - `defaultAvatarCheck`, which tests if the user's default avatar URL is identical to their display avatar URL. Their display URL changes to a custom URL once they upload a custom display picture.
   - `applyCheckPFPRole`, which is a wrapper on `applyRoleByNameToUser`, which has dummy data fed into it to fulfill the strictures of `iterateOverMembersAndReturnData`.
@@ -79,34 +86,32 @@ The second function was the `checkpfp` function, which is the final function tha
 ```
 
 The production release implementation was greatly improved, after the removal of `iterateOverMembersAndReturnData`
+
 - The cache of all members in the server is fetched
 - A `.forEach` method is called on the cache of all checked , applying the
 - The `hasDefaultPFP` utility, extracted to `roleUtils.ts`, is applied to each member
 - If the condition is fulfilled, then the `Change PFP` role is applied to the user
 
 ```typescript
-export let checkPFPCommand = async (inputGuildObject:Discord.Guild) => {
+export let checkPFPCommand = async (inputGuildObject: Discord.Guild) => {
   let checkedMembers = await inputGuildObject.members.fetch();
   checkedMembers.forEach((member) => {
-  if (hasDefaultPFP(member)) {
-    updateUserRole.addRole.byName(
-    member.guild,
-    member.id,
-    "Change PFP")
-  }
-  })
-}
+    if (hasDefaultPFP(member)) {
+      updateUserRole.addRole.byName(member.guild, member.id, "Change PFP");
+    }
+  });
+};
 ```
 
 In the production release, I have added the `help` command, which posts a message to the channel detailing the commands of the bot, and the arguments it takes. I have not abstracted this command into the `botCommands.ts` file, since it would just be a wrapper on the `message.channel.send` method.
 
 ```typescript
 async function zeroArgumentBotCommands(commandInput) {
-  let currentGuildObject = await fetchCurrentGuildObject
+  let currentGuildObject = await fetchCurrentGuildObject;
 
-  switch(commandInput){
-      case "help":
-        currentMessage.channel.send(`=help | Show list of commands
+  switch (commandInput) {
+    case "help":
+      currentMessage.channel.send(`=help | Show list of commands
         =boostinfo | Show server's boost info
         =checkpfp | Applies 'Default PFP' role to users with default PFP
         =join @user | Show when user joined Discord, and this Server
@@ -119,21 +124,20 @@ async function zeroArgumentBotCommands(commandInput) {
         =dmsg @user message | DM message to user
         =replaceall @roleA @roleB | Replaces all roleA with roleB
         =howmanyare @role @role .. | Show number of users with listed roles
-        =whois @role @role .. | Lists users by name with listed roles`)
-        break;
+        =whois @role @role .. | Lists users by name with listed roles`);
+      break;
 
-      case "boostinfo": // =boostinfo
-        postBoostInfoCommand(currentGuildObject,currentMessage);
-        break;
-        
-      case "checkpfp": // =checkpfp
-        checkPFPCommand(currentGuildObject);
-        break;
-    }
+    case "boostinfo": // =boostinfo
+      postBoostInfoCommand(currentGuildObject, currentMessage);
+      break;
+
+    case "checkpfp": // =checkpfp
+      checkPFPCommand(currentGuildObject);
+      break;
+  }
 }
 ```
 
 In the next and final post, I will summarise my experience designing and implementing this bot.
 
 [>> Summary](../summary.md)
-

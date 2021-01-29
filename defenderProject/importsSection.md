@@ -1,12 +1,13 @@
 # Imports, Dependencies and Folder Structure
 
-[<< Back to Project Overview](defenderProject.md)
+[<< Back to Project Overview](defenderIndex.md)
 
 [< Back to Introduction](introduction.md)
 
 Every programming project needs an main index file, to define the primary behavior of the program. This post details the imports & dependencies of this main index file, as well as the folder structure of the project. The details of the functions will be addressed in later posts.
 
 For the initial github commit, these are the imports:
+
 - A `config.json` file that contains the bot keys, to hook the bot into the code
 - The `fs` node File System library for reading & writing files with node
 - The `Discord.js` library, required for a discord bot written in javascript
@@ -16,10 +17,8 @@ For the initial github commit, these are the imports:
 const config = require("./config.json");
 const fs = require("fs");
 import * as Discord from "discord.js";
-import { extractNumbersForId 
-} from "./Utilities/argUtils";
-import { postInNamedChannel 
-} from "./Utilities/chanUtils";
+import { extractNumbersForId } from "./Utilities/argUtils";
+import { postInNamedChannel } from "./Utilities/chanUtils";
 import { iterateOverMembersAndReturnData } from "./Utilities/roleUtils";
 import {
   memberHasAnyRoleByName,
@@ -35,6 +34,7 @@ import {
 ```
 
 I noticed these problems needed to be cleared up:
+
 - Importing the entire `fs` library for a single function in the main index file
 - Redundant imports of the same `applyRoleByIdToUser` and `RemoveRoleByIdFromUser` functions
 - Not enough functions are extracted from the body of the index file into seperate libraries
@@ -44,12 +44,8 @@ The production release imports section looks like this:
 ```typescript
 const config = require("./config.json");
 import * as Discord from "discord.js";
-import { 
-  extractNumbersForId,
-} from "./botCommands/Utilities/argUtils";
-import {
-  memberHasAnyRoleByName,
-} from "./botCommands/Utilities/roleUtils";
+import { extractNumbersForId } from "./botCommands/Utilities/argUtils";
+import { memberHasAnyRoleByName } from "./botCommands/Utilities/roleUtils";
 import {
   postBoostInfoCommand,
   joinCommand,
@@ -63,11 +59,12 @@ import {
   unQuarantineCommand,
   warnCommand,
   msgCommand,
-  dmsgCommand
+  dmsgCommand,
 } from "./botCommands/botCommands";
 ```
 
 I made two major changes:
+
 1. The `fs` dependency is isolated to the `chanUtils.ts` file, rather than being required for the `index.ts` file.
 2. Every command (except for `help`) is abstracted into `botCommands.ts`, which now depends on the lower level components in Utilities.
 
@@ -85,14 +82,13 @@ The pre-release folder structure was:
 
 The release folder structure is:
 
-- ./ Root folder *(unchanged)*
+- ./ Root folder _(unchanged)_
   - ./botCommands folder with `botCommands.ts`
     - botCommands.ts contains bot command functions, extracted from index.ts
-      - ./botCommands/Utilities folder *(unchanged)*
-      
+      - ./botCommands/Utilities folder _(unchanged)_
+
 This is because, apart from a couple of imported utilities, all of the utilities are now exclusively dependencies of the `botCommands.ts` file. Now, the internal functioning of each command can change.
 
 The next post will detail the initialisation of the index file, as well as the behavior every time the bot detects a message has been posted to Discord.
 
 [>> Initialisation & Message Initialisation](initialisationAndOnMessage.md)
-      

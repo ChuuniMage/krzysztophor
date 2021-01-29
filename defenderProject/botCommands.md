@@ -1,6 +1,6 @@
 # Bot Commands
 
-[<< Back to Project Overview](defenderProject.md)
+[<< Back to Project Overview](defenderIndex.md)
 
 [< Back to The iterateOverMembersAndReturnData Function](utilities/iterate.md)
 
@@ -33,35 +33,36 @@ As an example, here is the start of the initial commit's `executebotCommand` fun
 We'll leave examination of this command for the next post. For now, what interests us is this piece of biolerplate code:
 
 ```typescript
-        if (!firstArgId) {
-          return;
-        }
+if (!firstArgId) {
+  return;
+}
 ```
+
 This code is in 11 of the 13 bot command functions in this file. The purpose of this code is to test if an argument was fed into the bot command at all, and to abort the function if no argument was fed into the function.
 
 Boilerplate sucks, so to fix this problem, we change the `executeBotCommands` function to feed the length of the `args` array into a switch statement, executing our commands depending on how many inputs our commands accept. This way, the logic check is performed upstream, and this boilerplate has been taken out 11 functions.
 
 ```typescript
-async function executeBotCommands (command:string) {
-  let currentGuildObject:Discord.Guild = await fetchCurrentGuildObject
-  
-  let lengthOfArgs = args.length
-  switch(lengthOfArgs){
-  case(0):
-    zeroArgumentBotCommands(currentGuildObject, command)
-    break;
-  case(1):
-    oneArgumentBotCommands(currentGuildObject, command)
-    arbitraryArgumentBotCommands(currentGuildObject, command);
-    break;
-  case(2): 
-    oneArgumentBotCommands(currentGuildObject, command) // To account for reasonMessage
-    twoArgumentBotCommands(currentGuildObject, command)
-    arbitraryArgumentBotCommands(currentGuildObject, command);
-    break;
-  default:
-    arbitraryArgumentBotCommands(currentGuildObject, command);
-    break;
+async function executeBotCommands(command: string) {
+  let currentGuildObject: Discord.Guild = await fetchCurrentGuildObject;
+
+  let lengthOfArgs = args.length;
+  switch (lengthOfArgs) {
+    case 0:
+      zeroArgumentBotCommands(currentGuildObject, command);
+      break;
+    case 1:
+      oneArgumentBotCommands(currentGuildObject, command);
+      arbitraryArgumentBotCommands(currentGuildObject, command);
+      break;
+    case 2:
+      oneArgumentBotCommands(currentGuildObject, command); // To account for reasonMessage
+      twoArgumentBotCommands(currentGuildObject, command);
+      arbitraryArgumentBotCommands(currentGuildObject, command);
+      break;
+    default:
+      arbitraryArgumentBotCommands(currentGuildObject, command);
+      break;
   }
 }
 ```

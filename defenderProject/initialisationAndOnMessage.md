@@ -1,16 +1,18 @@
 ## Initialisation & Message Initialisation
 
-[<< Back to Project Overview](defenderProject.md)
+[<< Back to Project Overview](defenderIndex.md)
 
 [< Back to Folder Structure, Imports and Dependencies](importsSection.md)
 
 Programs need to initialise a set of variables, constants, and function definitions on execution. This program has two stages of initialisation:
+
 1. The first initialisation process when the bot starts up
 2. The bot's next stage of initialisation whenever it reads a message in Discord
 
 This post covers the optimisations made in the initialisation phase of the program from the initial commit to the production release.
 
 The initial commit's initialisation process does the following:
+
 - Instantiates a new `Discord.Client()` object, so we can access the associated methods on the object.
 - Log into the Discord as a bot user, with the bot token specified in the config.json.
 - Initialise the prefix being used to parse user messages for bot commands.
@@ -34,24 +36,26 @@ client.on("message", function (message) {// insert rest of function here
 ```
 
 The bot runs through several boolean tests:
+
 - If the author of the message is a bot, stop the function.
-- If the message *does not* start with the prefix `=`, stop the function.
-- If the member who made the post *does not* have any of three roles, Moderator, Administrator, or Jay Dyer(the owner of the server), stop the function. The details of the `memberHasAnyRoleByName` function will be covered in a later post.
+- If the message _does not_ start with the prefix `=`, stop the function.
+- If the member who made the post _does not_ have any of three roles, Moderator, Administrator, or Jay Dyer(the owner of the server), stop the function. The details of the `memberHasAnyRoleByName` function will be covered in a later post.
 
 ```typescript
 //client.on("message", function (message) { // part 2
-  if (message.author.bot) return;
-  if (!message.content.startsWith(prefix)) return;
+if (message.author.bot) return;
+if (!message.content.startsWith(prefix)) return;
 
-  let messagerIsModOrAdminOrJayDyer:boolean = memberHasAnyRoleByName(
-    message.member,
-    ["Moderator", "Administrator", "Jay Dyer"]
-  );
+let messagerIsModOrAdminOrJayDyer: boolean = memberHasAnyRoleByName(
+  message.member,
+  ["Moderator", "Administrator", "Jay Dyer"]
+);
 
-  if (!messagerIsModOrAdminOrJayDyer) return;
-  ```
+if (!messagerIsModOrAdminOrJayDyer) return;
+```
 
-Next, the bot collects the content of the message, and  parses the message values in different variables for the following purposes:
+Next, the bot collects the content of the message, and parses the message values in different variables for the following purposes:
+
 - `args`, which is an array of strings, tokens to use for our arguments
 - `command`, which is removed from the first element of the args array to determine the command our bot performs
 - `reasonMessage`, which stores a string in case a command such as `kick` is called, to append the reason for usage of the command, (ie, `=kick @User For being a nuisance.`)
@@ -60,16 +64,17 @@ Next, the bot collects the content of the message, and  parses the message value
 
 ```typescript
 //client.on("message"... part 3
-  const commandBody = message.content.slice(prefix.length);
-  const args = commandBody.split(" ");
-  const command = args.shift().toLowerCase();
+const commandBody = message.content.slice(prefix.length);
+const args = commandBody.split(" ");
+const command = args.shift().toLowerCase();
 
-  let reasonMessage = args.slice(1, 9999).join(" ");
-  let firstArgId = extractNumbersForId(args[0]);
+let reasonMessage = args.slice(1, 9999).join(" ");
+let firstArgId = extractNumbersForId(args[0]);
 ```
 
 The next three components are:
-- The `memberHasRolesFromArgs` function, tests a member's roles against the roles provided in `args`. The details of this function will be covered in the [next post](argUtils.md). 
+
+- The `memberHasRolesFromArgs` function, tests a member's roles against the roles provided in `args`. The details of this function will be covered in the [next post](argUtils.md).
 - The `VIPRoleList` array, an array of role names granted immunity to commands such as `kick` or `ban`
 - The `isMemberVIP` function, which tests whether the user has a VIP role
 
@@ -109,9 +114,10 @@ The next three components are:
   async function executeBotCommand(commandInput) {...// etc
 ```
 
-Clearly, having so many computations being performed every single time a message is posted is not ideal. 
+Clearly, having so many computations being performed every single time a message is posted is not ideal.
 
 For the production release, I optimised the initialisation process and the message initialisation behavior the following ways:
+
 - `Server ID`, `botPermissionsRoleList`, and `VIPRoleList`, are all moved to the config.json, to decouple the details of the server itself from the main index file.
 - The `memberHasRolesFromArgs` has been abstracted and changed. The [Argument Utilities](utilities/argUtils.md) will explicate the details around its previous implementation, and how it has changed.
 - `isMemberVIP` function is defined prior, so that it isn't redefiend every time a message event is sent
@@ -131,7 +137,7 @@ export const isMemberVIP = (inputMember:Discord.GuildMember): boolean => {
 };
 
 let messageHasBotPermissions = (inputMessage:Discord.Message):boolean => {
-  let messagerIsBot = inputMessage.author.bot 
+  let messagerIsBot = inputMessage.author.bot
   if (messagerIsBot) {
     return false;
   }
@@ -160,18 +166,19 @@ After this cleanup and reorganisation, this is what the Message Initialisation c
 client.on("message", function (currentMessage) {//takes a message object as input
   if (!messageHasBotPermissions(currentMessage)){return}
   const fetchCurrentGuildObject = client.guilds.fetch(serverId);
-  
+
   const commandBody = currentMessage.content.slice(prefix.length);
   const args = commandBody.split(" ");
   const command = args.shift().toLowerCase();
 
   let firstArgId = extractNumbersForId(args[0]);
   let reasonForModeration = args.slice(1, 9999).join(" ");
-  
+
 async function executeBotCommands (command:string) {...
-```  
+```
+
 One other thing has changed: `const fetchCurrentGuildObject = client.guilds.fetch(serverId)` has been relocated here, to ensure that the bot is always fetching the most recent cache. Since it was defining the cache fetch prior to the message event, there was no guarantee that it was fetching the most up-to-date cache possible every time. Overall, the release structure is far cleaner than the initial commit.
 
-Before we look at the commands themselves,  we will look at the utilities that are components of these commands. 
+Before we look at the commands themselves, we will look at the utilities that are components of these commands.
 
 [>> Utilities](utilities.md)

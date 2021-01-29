@@ -1,20 +1,23 @@
 # Arbitrary Argument Commmands
 
-[<< Back to Project Overview](../defenderProject.md)
+[<< Back to Project Overview](../defenderIndex.md)
 
 [< Back to Bot Commands](../botCommands.md)
 
-In this post we'll cover two commands, `howmanyare` and `whois`. You may remember them from the [iterateOverMembersAndReturnData](../utilities/iterate.md) post. 
+In this post we'll cover two commands, `howmanyare` and `whois`. You may remember them from the [iterateOverMembersAndReturnData](../utilities/iterate.md) post.
 
-The purpose of `howmanyare` is to return a number of how many users have all of the roles given to the bot as arguments. The user types in `=howmanyare @Role1 @Role2 @Role3...` for as many roles as they wish to test, and the bot returns this number. 
- - For example, if there are 5 members with the role `@Lawyer`, telling the bot `=howmanyare @Lawyer` would return `Number of users with the following roles[@Lawyer] : 5`
- - If there are 4 members who had the role `@Doctor`, and 2 have the role `@Lawyer`, then typing `=howmanyare @Doctor @Lawyer` would return  `Number of users with the following roles[@Doctor, @Lawyer] : 2`
- 
- The purpose of `whois` is similar to `howmanyare`, but instead of returning a raw number, the purpose is to return a list of usernames, their unique discriminator, and nickname, ie `"DiscordUser#1234 (Nickname)"`
-  - For example, if there are 5 members with the role `@Lawyer`, telling the bot `=whois @Lawyer` would return `The users with the roles[@Lawyer] are: Jack#1234 (Blackjack), Jill#5656 (UpTheHill), Gary#6479 (GaryOaks), Tamara#9999 (T4m4r4), Clint#8887 (Westwood)`
- - If there are 4 members who had the role `@Doctor`, and 2 have the role `@Lawyer`, then typing `=howmanyare @Doctor @Lawyer` would return  `The users with the roles[@Doctor, @Lawyer] are : Jack#1234 (Blackjack), Jill#5656 (UpTheHill)`
- 
-First, we'll see `howmanyare`'s initial implementation. 
+The purpose of `howmanyare` is to return a number of how many users have all of the roles given to the bot as arguments. The user types in `=howmanyare @Role1 @Role2 @Role3...` for as many roles as they wish to test, and the bot returns this number.
+
+- For example, if there are 5 members with the role `@Lawyer`, telling the bot `=howmanyare @Lawyer` would return `Number of users with the following roles[@Lawyer] : 5`
+- If there are 4 members who had the role `@Doctor`, and 2 have the role `@Lawyer`, then typing `=howmanyare @Doctor @Lawyer` would return `Number of users with the following roles[@Doctor, @Lawyer] : 2`
+
+The purpose of `whois` is similar to `howmanyare`, but instead of returning a raw number, the purpose is to return a list of usernames, their unique discriminator, and nickname, ie `"DiscordUser#1234 (Nickname)"`
+
+- For example, if there are 5 members with the role `@Lawyer`, telling the bot `=whois @Lawyer` would return `The users with the roles[@Lawyer] are: Jack#1234 (Blackjack), Jill#5656 (UpTheHill), Gary#6479 (GaryOaks), Tamara#9999 (T4m4r4), Clint#8887 (Westwood)`
+- If there are 4 members who had the role `@Doctor`, and 2 have the role `@Lawyer`, then typing `=howmanyare @Doctor @Lawyer` would return `The users with the roles[@Doctor, @Lawyer] are : Jack#1234 (Blackjack), Jill#5656 (UpTheHill)`
+
+First, we'll see `howmanyare`'s initial implementation.
+
 - The `!firstArgId` boilerplate is present, taken care of in the [previous post](../botCommands.md)
 - The `updateArrayForHowManyAre` function is defined, and only used once, in the scope of this function. This pushes a user's name into the array, to be used as a token to track the amount of users who are in the array.
 - `whohasRoles`, an empty array is initialised
@@ -24,7 +27,7 @@ First, we'll see `howmanyare`'s initial implementation.
   - The `message.channel.send` method sends a message to the channel that the user gave the bot a command in.
   - The roles, which are still in the `args` array, are joined to display them in this post
   - The length of `returnedRoleArray` is calculated, to display the number of users who have the associated roles
-  
+
 ```typescript
 case "howmanyare": //howmanyare @role @role .. etc
         if (!firstArgId) {
@@ -55,42 +58,48 @@ case "howmanyare": //howmanyare @role @role .. etc
 ```
 
 The production release implementation of `howmanyare` is much cleaner:
+
 - Three parameters are accepted
   - The Discord server cache, aka the GuildObject
   - The `inputIDs` being tested on the users of this server
   - The `inputMessage` that triggered this command
 - The members are fetched asynchronously with `await inputGuildObject.members.fetch();`
 - `usersWithRolesArray` is typed as an array of strings and and initialised
-- The usernames of each user is pushed into `usersWithRolesArray`,  as tokens to count the length of the array with
+- The usernames of each user is pushed into `usersWithRolesArray`, as tokens to count the length of the array with
 - The `roleNameArray` is defined, to post the roles in the message
 - A message is posted to the channel of the `inputMessage`, using the `roleNameArray` to post the tested role names, and the length of the `UsersWithRolesArray`
 
 ```typescript
 export let howManyAreCommand = async (
-inputGuildObject:Discord.Guild, 
-inputIDs:string[], 
-inputMessage:Discord.Message) => {
-
+  inputGuildObject: Discord.Guild,
+  inputIDs: string[],
+  inputMessage: Discord.Message
+) => {
   let checkedMembers = await inputGuildObject.members.fetch();
-  let usersWithRolesArray:string[] = []
-  
+  let usersWithRolesArray: string[] = [];
+
   checkedMembers.forEach((member) => {
-    if (memberHasAllRolesById(member, inputIDs)){
+    if (memberHasAllRolesById(member, inputIDs)) {
       usersWithRolesArray.push(member.user.username);
     }
-  })
-  let roleNameArray = returnRoleIdNameArrayToPost(inputIDs)
-  
+  });
+  let roleNameArray = returnRoleIdNameArrayToPost(inputIDs);
+
   inputMessage.channel.send(
-    `Number of users with the following roles[${roleNameArray.join(", ")}] : ${usersWithRolesArray.length}`)
-}
+    `Number of users with the following roles[${roleNameArray.join(", ")}] : ${
+      usersWithRolesArray.length
+    }`
+  );
+};
 ```
 
 The initial commit's `whois` command is similar in structure, so I will mention the relevant differences:
+
 - The `updateArrayForWhoIs` is a similar function to `updateArrayForHowManyAre`, but the array is populated with strings containing information that fit the following format: `"DiscordUser#1234 (Nickname)"`.
 - The ternary operator defines the `nickname` variable as the user's nickname if they have one, or their username if they do not have a nickname for the server.
 - After `iterateOverMembersAndReturnData` executes, the array of username strings is concatonated into the `computedPost` string.
 - Then, we check if that string's length is over 2000 characters long, the Discord post length limit. If it is under the limit, the post is made as usual. If it is over the limit, then the post is rendered as a text file, and attached to the post, along with an appropriate error message.
+
 ```typescript
 case "whois": // =whois @role @role .. etc
         if (!firstArgId) {
@@ -135,6 +144,7 @@ case "whois": // =whois @role @role .. etc
 ```
 
 This is by far the most awkward function in the initial commit. It's greatly improved for the production release.
+
 - The `updateArrayForWhoIs` function is subsumed into the `whoIsCommand` function itself, removing an extraneous callback function
 - `postedUsers` is defined in order to append this string onto `computedPost` later
 - We checks if the first element of the `userNameAndNicknameArray` is undefined, in which case it updates the `postedUsers` string with "No-one." to give a natural language response to zero users being found with the tested roles. If it is defined, then `postedUsers` is the concatenation of all of the usernames.
@@ -142,52 +152,60 @@ This is by far the most awkward function in the initial commit. It's greatly imp
 - The `appendTxtFileIfPostTooBig` function from [chanUtils.ts](../utilities/chanUtils.md) is called, feeding in the `computedPost` and the `inputMessage`
 
 ```typescript
-export let whoIsCommand = async (inputGuildObject:Discord.Guild, 
-  inputIDs:string[], 
-  inputMessage:Discord.Message) => {
+export let whoIsCommand = async (
+  inputGuildObject: Discord.Guild,
+  inputIDs: string[],
+  inputMessage: Discord.Message
+) => {
   let checkedMembers = await inputGuildObject.members.fetch();
-  let usernameAndNicknameArray:string[] = []
-  
-  checkedMembers.forEach((member) => {
-    if (memberHasAllRolesById(member, inputIDs)){
-// Populates array with string entries of this format: "DiscordUser#1234 (Nickname)"
-      let nickname = member.nickname ? member.nickname : member.user.username;
-      usernameAndNicknameArray.push(`${member.user.username}#${member.user.discriminator} (${nickname})`)}
-      })
-        let computedPost:string
-        let postedUsers:string
-        if (usernameAndNicknameArray[0] === undefined){
-          postedUsers = 'No-one.';
-        } else {
-          postedUsers = usernameAndNicknameArray.join(", ")
-        }
-     
-    let roleNameArray = returnRoleIdNameArrayToPost(inputIDs)
-    computedPost = `The users with the roles[${roleNameArray.join(", ")}] are: ${postedUsers}`
-    
-    appendTxtFileIfPostTooBig(computedPost,inputMessage,"whoIsFile")
-}
+  let usernameAndNicknameArray: string[] = [];
 
+  checkedMembers.forEach((member) => {
+    if (memberHasAllRolesById(member, inputIDs)) {
+      // Populates array with string entries of this format: "DiscordUser#1234 (Nickname)"
+      let nickname = member.nickname ? member.nickname : member.user.username;
+      usernameAndNicknameArray.push(
+        `${member.user.username}#${member.user.discriminator} (${nickname})`
+      );
+    }
+  });
+  let computedPost: string;
+  let postedUsers: string;
+  if (usernameAndNicknameArray[0] === undefined) {
+    postedUsers = "No-one.";
+  } else {
+    postedUsers = usernameAndNicknameArray.join(", ");
+  }
+
+  let roleNameArray = returnRoleIdNameArrayToPost(inputIDs);
+  computedPost = `The users with the roles[${roleNameArray.join(
+    ", "
+  )}] are: ${postedUsers}`;
+
+  appendTxtFileIfPostTooBig(computedPost, inputMessage, "whoIsFile");
+};
 ```
 
 So now that we've covered the implementation of these functions, what do these look like implemented in the main index file? They've been placed together into the `arbitraryArgumentBotCommands` function.
 
 ```typescript
-async function arbitraryArgumentBotCommands(inputGuildObject:Discord.Guild, commandInput) {
-  let inputIDs:string[] = returnIdArrayFromArgs(args)
+async function arbitraryArgumentBotCommands(
+  inputGuildObject: Discord.Guild,
+  commandInput
+) {
+  let inputIDs: string[] = returnIdArrayFromArgs(args);
 
-    switch(commandInput){
-      
-      case "howmanyare": // =howmanyare @role @role .. etc
-        howManyAreCommand(inputGuildObject, inputIDs, currentMessage)
-        break;
+  switch (commandInput) {
+    case "howmanyare": // =howmanyare @role @role .. etc
+      howManyAreCommand(inputGuildObject, inputIDs, currentMessage);
+      break;
 
-      case "whois": // =whois @role @role .. etc
-        whoIsCommand(inputGuildObject, inputIDs, currentMessage)
-        break;
-      }
-    }
- ```
+    case "whois": // =whois @role @role .. etc
+      whoIsCommand(inputGuildObject, inputIDs, currentMessage);
+      break;
+  }
+}
+```
 
 It couldn't be cleaner. In the next post, we'll be covering arguments that take two commands as inputs.
 
