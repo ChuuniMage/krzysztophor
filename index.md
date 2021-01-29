@@ -15,7 +15,7 @@ You can find my articles about writing this bot here: [>> Defender Project](defe
 - JIRA & Zendesk ticketing systems
 - Over 100 WPM typing speed
 
-### Future skills
-- I am currently learning the [React](https://reactjs.org/) framework, to learn
+### Future learning goals
+- I am currently learning the [React](https://reactjs.org/) framework, to produce web applications
 - Learn more languages in the Javascript ecosystem, such as (ClojureScript)(https://clojurescript.org/) or [Purescript](https://www.purescript.org/)
 - Learn how to implement [webassembly](https://webassembly.org/) in projects, 
