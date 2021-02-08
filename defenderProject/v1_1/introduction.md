@@ -10,7 +10,7 @@ The bot would parse messages, like this with no issue:
 
 However, if it were to be passed a message like this:
 
-`=kick  @user for being a blockhead`
+`=kick    @user for being a blockhead`
 
 It would not parse. Why? There are two spaces, not one, between the `=kick` command and the `@user` being kicked.
 
