@@ -14,7 +14,7 @@ In this series of posts, I showcase the updates from the Release Commit to the f
 
 [Introduction](v1_1/introduction.md)
 
-[Changes to the main index file](v1_1/index.md)
+[Changes to the main index file](v1_1/indexFile.md)
 
 [New Argutils](v1_1/newArgUtils.md)
 
