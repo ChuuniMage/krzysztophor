@@ -27,3 +27,5 @@ My first completed project is the Orthodox Defender bot, which is a Discord Bot 
 
 [>> Project Typikon](projectTypikon/projectTypikon.md)
 I have another in-progress progress, to make an Orthodox Church Calender web application. 
+
+[>> Genesis of Code](genesis/index.md)
